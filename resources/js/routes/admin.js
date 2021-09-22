@@ -1,4 +1,5 @@
-const dashboard = () =>import ( '../components/admin/dashboard.vue')
+const dashboard = () =>import ( '../components/admin/dashboard')
+const pdfs = () =>import ( '../components/admin/pdf')
 
 export default [
     {
@@ -9,5 +10,10 @@ export default [
     {
         path: '/admin',
         redirect:'/admin/dashboard'
+    },
+    {
+        path: '/admin/pdfs',
+        component: pdfs,
+        name: 'pdfs',
     },
 ]
