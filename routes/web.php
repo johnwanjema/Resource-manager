@@ -31,3 +31,7 @@ Route::get('logout', [
         return redirect('/home');
     }
 ]);
+
+Route::get('/admin', function () {
+    return view('admin');
+});
