@@ -32,6 +32,7 @@ Route::get('logout', [
     }
 ]);
 
-Route::get('/admin', function () {
+Route::get('/admin/{any?}/{component?}', function () {
     return view('admin');
 });
+
