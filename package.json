@@ -29,6 +29,7 @@
         "moment": "^2.29.1",
         "sweetalert2": "^11.1.6",
         "vform": "^2.1.1",
-        "vue-router": "^3.5.2"
+        "vue-router": "^3.5.2",
+        "vue-tinymce-editor": "^1.6.2"
     }
 }

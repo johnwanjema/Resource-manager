@@ -94,6 +94,10 @@
                                         <label for="description">Description</label>
                                         <input type="text" class="form-control" id="description" name="description" placeholder="Enter description.." />
                                     </div>
+                                     <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <tinymce id="d1" v-model="data"></tinymce>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -126,7 +130,8 @@ export default {
             form: new Form({
 
             }),
-            editMode: false
+            editMode: false,
+            data:''
         }
     },
     computed: {
