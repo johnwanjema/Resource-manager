@@ -453,7 +453,7 @@
                                                     <router-link to="/admin/htmlsnippets"><i class="fa fa-code"></i><span class="sidebar-mini-hide">HTML snippet</span></router-link>
                                                 </li>
                                                 <li>
-                                                    <router-link to="/admin/links"><i class="si si-link"></i><span class="sidebar-mini-hide">Link</span></router-link>
+                                                    <router-link to="/admin/links"><i class="si si-link"></i><span class="sidebar-mini-hide">Links</span></router-link>
                                                 </li>
                                             </ul>
                                         </div>
