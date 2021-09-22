@@ -23,3 +23,11 @@ Auth::routes();
 Route::get('/home/{any?}/{component?}', function () {
     return view('home');
 });
+
+Route::get('logout', [
+    'as' => 'logout',
+    function () {
+        Auth::logout();
+        return redirect('/home');
+    }
+]);
