@@ -444,20 +444,20 @@
                                         <div class="content-side content-side-full">
                                             <ul class="nav-main">
                                                 <li>
-                                                    <router-link to="/admin"><i class="fa fa-cogs"></i><span class="sidebar-mini-hide">Dashboard</span></router-link>
+                                                    <router-link to="/admin"><i class="fa fa-bar-chart"></i><span class="sidebar-mini-hide">Dashboard</span></router-link>
                                                 </li>
                                                 <li>
-                                                    <router-link to="/admin/pdfs"><i class="fa fa-building"></i><span class="sidebar-mini-hide">PDFS</span></router-link>
+                                                    <router-link to="/admin/pdfs"><i class="fa fa-book"></i><span class="sidebar-mini-hide">PDFS</span></router-link>
                                                 </li>
                                                 <li>
-                                                    <router-link to="/admin/snippet"><i class="si si-users"></i><span class="sidebar-mini-hide">HTML snippet</span></router-link>
+                                                    <router-link to="/admin/htmlsnippets"><i class="fa fa-code"></i><span class="sidebar-mini-hide">HTML snippet</span></router-link>
                                                 </li>
                                                 <li>
-                                                    <router-link to="/admin/links"><i class="fa fa-money"></i><span class="sidebar-mini-hide">Link</span></router-link>
+                                                    <router-link to="/admin/links"><i class="si si-link"></i><span class="sidebar-mini-hide">Links</span></router-link>
                                                 </li>
                                             </ul>
                                         </div>
-                                        <!-- END Side Navigation -->
+                                        <!-- END Side Navigation -->    
                                     </div>
                                     <!-- Sidebar Content -->
                                 </div>

@@ -63,7 +63,8 @@ Vue.filter('humanize', function (value) {
     return moment(value).fromNow()
 });
 
-
+import tinymce from 'vue-tinymce-editor'
+Vue.component('tinymce', tinymce)
 
 
 const app = new Vue({
