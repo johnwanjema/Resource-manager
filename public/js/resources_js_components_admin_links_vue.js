@@ -136,6 +136,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -179,7 +182,7 @@ __webpack_require__.r(__webpack_exports__);
         if (data.success) {
           toast.fire({
             icon: "success",
-            title: "Snippet updated successfully"
+            title: "Link updated successfully"
           });
           $('#modal-large').modal('hide');
 
@@ -234,6 +237,30 @@ __webpack_require__.r(__webpack_exports__);
         _this3.totalRows = _this3.links.length;
       })["catch"](function (e) {
         console.log(error);
+      });
+    },
+    deleteLink: function deleteLink(id) {
+      var _this4 = this;
+
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        // send request
+        if (result.value) {
+          _this4.form["delete"]("/api/links/" + id).then(function () {
+            Swal.fire("Deleted!", "Link has been deleted.", "success");
+
+            _this4.getLinks();
+          })["catch"](function () {
+            Swal.fire("Failed to delete link.", "Failed", 'error');
+          });
+        }
       });
     }
   },
@@ -560,6 +587,24 @@ var render = function() {
                                 [
                                   _vm._v(
                                     "\n                                        Edit\n                                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-button",
+                                {
+                                  staticClass: "btn btn-sm",
+                                  attrs: { variant: "danger" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteLink(row.item.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                        Delete\n                                    "
                                   )
                                 ]
                               )

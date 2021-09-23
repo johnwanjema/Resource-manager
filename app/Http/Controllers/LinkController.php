@@ -119,6 +119,12 @@ class LinkController extends Controller
      */
     public function destroy(Link $link)
     {
-        //
+        try{
+            $link->delete();
+
+            return api_response(true,null, 200, 'success','successfully deleted link', $link);
+        }catch (\Exception $exception){
+            return api_response(false,$exception->getMessage(), 200, 'error','error deleting link', null);
+        }
     }
 }

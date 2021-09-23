@@ -53,6 +53,9 @@
                                         <b-button class="btn btn-sm" variant="warning" @click="openEditModal(row.item)">
                                             Edit
                                         </b-button>
+                                        <b-button class="btn btn-sm" variant="danger" @click="deleteLink(row.item.id)">
+                                            Delete
+                                        </b-button>
                                     </template>
                                 </b-table>
                             </div>
@@ -159,7 +162,7 @@ export default {
                     if(data.success){
                         toast.fire({
                         icon: "success",
-                        title: "Snippet updated successfully"
+                        title: "Link updated successfully"
                         });
                         $('#modal-large').modal('hide');
                         this.form.reset();
@@ -209,7 +212,31 @@ export default {
                 .catch((e) => {
                     console.log(error)
                 });
-        }
+        },
+        deleteLink(id) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then(result => {
+                // send request
+                if (result.value) {
+                    this.form
+                        .delete("/api/links/" + id)
+                        .then(() => {
+                            Swal.fire("Deleted!", "Link has been deleted.", "success");
+                            this.getLinks();
+                        })
+                        .catch(() => {
+                            Swal.fire("Failed to delete link.", "Failed",'error');
+                        });
+                }
+            });
+        },
     },
     created() {
         this.getLinks();
