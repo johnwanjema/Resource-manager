@@ -37,6 +37,11 @@ class PdfController extends Controller
     {
         // return $request->all();
         try {
+            $this->validate($request, [
+                'title' => 'required',
+                'description' => 'required',
+            ]);
+
             $resource = new Pdf();
             $resource->title = $request['title'];
             $resource->description = $request['description'];
