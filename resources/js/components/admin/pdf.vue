@@ -6,8 +6,8 @@
                 <div class="block-header block-header-default">
                     <h3 class="block-title"><small></small></h3>
                     <button class="btn btn-success" @click="openModal()">
-                        Add PDF
-                    </button>
+                            Add PDF
+                        </button>
                 </div>
                 <div class="block-content block-content-full">
                     <div id="DataTables_Table_1_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
@@ -15,15 +15,15 @@
                             <div class="col-sm-12 col-md-6">
                                 <div class="dataTables_length" id="DataTables_Table_1_length">
                                     <label>
-                                        Show
-                                        <select v-model="perPage" name="DataTables_Table_1_length" aria-controls="DataTables_Table_1" class="custom-select custom-select-sm form-control form-control-sm">
-                                            <option value="5">5</option>
-                                            <option value="8">8</option>
-                                            <option value="15">15</option>
-                                            <option value="20">20</option>
-                                        </select>
-                                        entries
-                                    </label>
+                                            Show
+                                            <select v-model="perPage" name="DataTables_Table_1_length" aria-controls="DataTables_Table_1" class="custom-select custom-select-sm form-control form-control-sm">
+                                                <option value="5">5</option>
+                                                <option value="8">8</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                            </select>
+                                            entries
+                                        </label>
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-6">
@@ -36,15 +36,21 @@
                             <div class="col-sm-12">
                                 <b-table responsive striped hover show-empty :items="pdfs" :fields="fields" :per-page="perPage" :current-page="currentPage" :filter="filter" :filterIncludedFields="filterOn" @filtered="onFiltered">
                                     <template v-slot:cell(#)="row">
-                                        <p>{{row.index + 1}}</p>
+                                            <p>{{row.index + 1}}</p>
+                                    </template>
+                                    <template v-slot:cell(created_at)="row">
+                                        <p>{{row.item.created_at |filterDateOnly}}</p>
                                     </template>
 
                                     <template v-slot:cell(actions)="row">
-                                        <b-button class="btn btn-sm" variant="primary" @click="openVIewModal(row.item)">
+                                        <a class="btn btn-primary btn-sm"  :href="'/PDF/'+ row.item.storageLink" target="_blank">
                                             View
-                                        </b-button>
+                                        </a>
                                         <b-button class="btn btn-sm" variant="warning" @click="openEditModal(row.item)">
                                             Edit
+                                        </b-button>
+                                        <b-button class="btn btn-sm" variant="danger" @click="deletePDF(row.item.id)">
+                                            Delete
                                         </b-button>
                                     </template>
                                 </b-table>
@@ -67,7 +73,7 @@
         <div class="modal" id="modal-large" tabindex="-1" role="dialog" aria-labelledby="modal-large" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <form @submit.prevent="updatePDf">
+                    <form @submit.prevent="editMode ? updatePDf() : addpdf()">
                         <div class="block block-themed block-transparent mb-0">
                             <div class="block-header bg-primary-dark">
                                 <h3 v-if="editMode" class="block-title">Edit PDF</h3>
@@ -79,22 +85,20 @@
                                 </div>
                             </div>
                             <div class="block-content">
-                                <form action="be_forms_elements_bootstrap.html" method="post" onsubmit="return false;">
-                                    <div class="form-group">
-                                        <label for="email">Title</label>
-                                        <input type="text" class="form-control" id="email" name="email" placeholder="Enter title.." />
+                                <div class="form-group">
+                                    <label for="email">Title</label>
+                                    <input required v-model="form.title" type="text" class="form-control" id="email" name="email" placeholder="Enter title.." />
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <input required v-model="form.description" type="text" class="form-control" id="description" name="description" placeholder="Enter description.." />
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12" for="file-input">File Upload</label>
+                                    <div class="col-12">
+                                        <input required  @change="selectPdf" type="file" id="file-input" name="file-input">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="description">Description</label>
-                                        <input type="text" class="form-control" id="description" name="description" placeholder="Enter description.." />
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-12" for="example-file-input">File Upload</label>
-                                        <div class="col-12">
-                                            <input type="file" id="example-file-input" name="example-file-input">
-                                        </div>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -113,23 +117,24 @@
     </section>
 </template>
 
-
-
 <script>
 export default {
     data() {
         return {
             currentPage: 1,
             perPage: 5,
-            items: [],
-            fields: ['#', { key: 'titile', }, { key: 'description', }, 'created_at', { key: 'actions', label: 'Actions' }],
-            pdfs: [{}],
+            fields: ['#', { key: 'title', }, { key: 'description', }, 'created_at', { key: 'actions', label: 'Actions' }],
+            pdfs: [],
             filter: null,
             filterOn: [],
             form: new Form({
-
+                id:'',
+                title:'',
+                description:'',
+                pdf: '',
             }),
-            editMode: false
+            editMode: false,
+            pdf:{}
         }
     },
     computed: {
@@ -138,31 +143,107 @@ export default {
         }
     },
     methods: {
-        openVIewModal(pdf) {
-            $('#modal').modal('show');
-            this.form.fill(pdf)
-        },
         updatePDf() {
-
+             axios.put("/api/pdfs/"+ this.pdf.id , this.form )
+                .then(({data}) => {
+                    if(data.success){
+                        toast.fire({
+                            icon: "success",
+                            title: "PDF updated successfully"
+                        });
+                        $('#modal-large').modal('hide');
+                        this.form.reset();
+                        document.getElementById("file-input").value = "";
+                        this.getPdfs();
+                    }
+                })
+                .catch((e) => {
+                    console.log(error)
+                });
+        },
+        selectPdf(event) {
+            this.form.pdf = event.target.files[0];
         },
         openModal() {
+            this.form.reset()
             this.editMode = false;
             $('#modal-large').modal('show');
         },
-        openEditModal() {
+        openEditModal(pdf) {
             this.editMode = true;
+            this.pdf = pdf
             $('#modal-large').modal('show');
+            this.form.fill(pdf);
+            // document.getElementById("file-input").value = pdf.storageLink;
         },
         onFiltered(filteredItems) {
             this.totalRows = filteredItems.length;
             this.currentPage = 1
         },
-        getPdf() {
+        getPdfs() {
+            axios.get("/api/pdfs" )
+                .then(({data}) => {
+                    // console.log(data);
+                    this.pdfs = data.data;
+                    this.totalRows = this.pdfs.length;
+                })
+                .catch((e) => {
+                    console.log(error)
+                });
+        },
+        addpdf() {
+            let data = new FormData();
+            data.append('title', this.form.title);
+            data.append('description', this.form.description);
+            data.append('pdf', this.form.pdf);
 
-        }
+            axios.post("/api/pdfs", data, {
+                headers: {
+                    'accept': 'application/json',
+                    'Accept-Language': 'en-US,en;q=0.8',
+                    'Content-Type': 'multipart/form-data',
+                }
+            }).then(({ data }) => {
+                if (data.success) {
+                    $('#modal-large').modal('hide');
+                    this.form.reset();
+                    document.getElementById("file-input").value = "";
+                    toast.fire({
+                        icon: "success",
+                        title: "PDF added successfully"
+                    });
+                    this.getPdfs();
+                }
+            });
+        },
+        deletePDF(id) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then(result => {
+                // send request
+                if (result.value) {
+                    this.form
+                        .delete("/api/pdfs/" + id)
+                        .then(() => {
+                            Swal.fire("Deleted!", "PDF has been deleted.", "success");
+                            this.getPdfs();
+                        })
+                        .catch(() => {
+                            Swal.fire("Failed to delete", "Failed",'error');
+                        });
+                }
+            });
+        },
+
     },
     created() {
-        this.getPdf();
+        this.getPdfs();
     }
 }
 </script>

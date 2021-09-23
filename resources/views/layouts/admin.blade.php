@@ -395,7 +395,7 @@
 
                                                 <!-- Logo -->
                                                 <div class="content-header-item">
-                                                    <a class="link-effect font-w700" href="#">
+                                                    <a class="link-effect font-w700" href="javascript:void(0)">
                                                         <!-- <i class="si si-fire text-primary"></i> -->
                                                         <span class="font-size-xl text-dual-primary-dark">Resource</span><span class="font-size-xl text-primary">Managment</span>
                                                     </a>
@@ -421,7 +421,7 @@
                                                 </a>
                                                 <ul class="list-inline mt-10">
                                                     <li class="list-inline-item">
-                                                        <a class="link-effect text-dual-primary-dark font-size-sm font-w600 text-uppercase" href="#">John Doe</a>
+                                                        <a class="link-effect text-dual-primary-dark font-size-sm font-w600 text-uppercase" href="javascript:void(0)">John Doe</a>
                                                     </li>
                                                     <li class="list-inline-item">
                                                         <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
@@ -523,7 +523,7 @@
                         Crafted with <i class="fa fa-heart text-pulse"></i> by <a class="font-w600" href="javascript:void(0)" ></a>
                     </div> -->
                     <div class="float-left">
-                        <a class="font-w600" href="#">Resource Manager</a> © <span class="js-year-copy js-year-copy-enabled">{{date('Y')}}</span>
+                        <a class="font-w600" href="javascript:void(0)">Resource Manager</a> © <span class="js-year-copy js-year-copy-enabled">{{date('Y')}}</span>
                     </div>
                 </div>
             </footer>

@@ -128,25 +128,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       currentPage: 1,
       perPage: 5,
-      items: [],
       fields: ['#', {
-        key: 'titile'
+        key: 'title'
       }, {
         key: 'description'
       }, 'created_at', {
         key: 'actions',
         label: 'Actions'
       }],
-      pdfs: [{}],
+      pdfs: [],
       filter: null,
       filterOn: [],
-      form: new Form({}),
-      editMode: false
+      form: new Form({
+        id: '',
+        title: '',
+        description: '',
+        pdf: ''
+      }),
+      editMode: false,
+      pdf: {}
     };
   },
   computed: {
@@ -155,27 +162,117 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    openVIewModal: function openVIewModal(pdf) {
-      $('#modal').modal('show');
-      this.form.fill(pdf);
+    updatePDf: function updatePDf() {
+      var _this = this;
+
+      axios.put("/api/pdfs/" + this.pdf.id, this.form).then(function (_ref) {
+        var data = _ref.data;
+
+        if (data.success) {
+          toast.fire({
+            icon: "success",
+            title: "PDF updated successfully"
+          });
+          $('#modal-large').modal('hide');
+
+          _this.form.reset();
+
+          document.getElementById("file-input").value = "";
+
+          _this.getPdfs();
+        }
+      })["catch"](function (e) {
+        console.log(error);
+      });
     },
-    updatePDf: function updatePDf() {},
+    selectPdf: function selectPdf(event) {
+      this.form.pdf = event.target.files[0];
+    },
     openModal: function openModal() {
+      this.form.reset();
       this.editMode = false;
       $('#modal-large').modal('show');
     },
-    openEditModal: function openEditModal() {
+    openEditModal: function openEditModal(pdf) {
       this.editMode = true;
+      this.pdf = pdf;
       $('#modal-large').modal('show');
+      this.form.fill(pdf); // document.getElementById("file-input").value = pdf.storageLink;
     },
     onFiltered: function onFiltered(filteredItems) {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getPdf: function getPdf() {}
+    getPdfs: function getPdfs() {
+      var _this2 = this;
+
+      axios.get("/api/pdfs").then(function (_ref2) {
+        var data = _ref2.data;
+        // console.log(data);
+        _this2.pdfs = data.data;
+        _this2.totalRows = _this2.pdfs.length;
+      })["catch"](function (e) {
+        console.log(error);
+      });
+    },
+    addpdf: function addpdf() {
+      var _this3 = this;
+
+      var data = new FormData();
+      data.append('title', this.form.title);
+      data.append('description', this.form.description);
+      data.append('pdf', this.form.pdf);
+      axios.post("/api/pdfs", data, {
+        headers: {
+          'accept': 'application/json',
+          'Accept-Language': 'en-US,en;q=0.8',
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (_ref3) {
+        var data = _ref3.data;
+
+        if (data.success) {
+          $('#modal-large').modal('hide');
+
+          _this3.form.reset();
+
+          document.getElementById("file-input").value = "";
+          toast.fire({
+            icon: "success",
+            title: "PDF added successfully"
+          });
+
+          _this3.getPdfs();
+        }
+      });
+    },
+    deletePDF: function deletePDF(id) {
+      var _this4 = this;
+
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        // send request
+        if (result.value) {
+          _this4.form["delete"]("/api/pdfs/" + id).then(function () {
+            Swal.fire("Deleted!", "PDF has been deleted.", "success");
+
+            _this4.getPdfs();
+          })["catch"](function () {
+            Swal.fire("Failed to delete", "Failed", 'error');
+          });
+        }
+      });
+    }
   },
   created: function created() {
-    this.getPdf();
+    this.getPdfs();
   }
 });
 
@@ -283,7 +380,7 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("\n                    Add PDF\n                ")]
+            [_vm._v("\n                        Add PDF\n                    ")]
           )
         ]),
         _vm._v(" "),
@@ -306,7 +403,7 @@ var render = function() {
                     [
                       _c("label", [
                         _vm._v(
-                          "\n                                    Show\n                                    "
+                          "\n                                        Show\n                                        "
                         ),
                         _c(
                           "select",
@@ -360,7 +457,7 @@ var render = function() {
                           ]
                         ),
                         _vm._v(
-                          "\n                                    entries\n                                "
+                          "\n                                        entries\n                                    "
                         )
                       ])
                     ]
@@ -435,18 +532,32 @@ var render = function() {
                           }
                         },
                         {
+                          key: "cell(created_at)",
+                          fn: function(row) {
+                            return [
+                              _c("p", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("filterDateOnly")(
+                                      row.item.created_at
+                                    )
+                                  )
+                                )
+                              ])
+                            ]
+                          }
+                        },
+                        {
                           key: "cell(actions)",
                           fn: function(row) {
                             return [
                               _c(
-                                "b-button",
+                                "a",
                                 {
-                                  staticClass: "btn btn-sm",
-                                  attrs: { variant: "primary" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.openVIewModal(row.item)
-                                    }
+                                  staticClass: "btn btn-primary btn-sm",
+                                  attrs: {
+                                    href: "/PDF/" + row.item.storageLink,
+                                    target: "_blank"
                                   }
                                 },
                                 [
@@ -470,6 +581,24 @@ var render = function() {
                                 [
                                   _vm._v(
                                     "\n                                        Edit\n                                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-button",
+                                {
+                                  staticClass: "btn btn-sm",
+                                  attrs: { variant: "danger" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deletePDF(row.item.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                        Delete\n                                    "
                                   )
                                 ]
                               )
@@ -543,7 +672,7 @@ var render = function() {
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
-                      return _vm.updatePDf.apply(null, arguments)
+                      _vm.editMode ? _vm.updatePDf() : _vm.addpdf()
                     }
                   }
                 },
@@ -570,7 +699,102 @@ var render = function() {
                         ]
                       ),
                       _vm._v(" "),
-                      _vm._m(2)
+                      _c("div", { staticClass: "block-content" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "email" } }, [
+                            _vm._v("Title")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.title,
+                                expression: "form.title"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "text",
+                              id: "email",
+                              name: "email",
+                              placeholder: "Enter title.."
+                            },
+                            domProps: { value: _vm.form.title },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.form, "title", $event.target.value)
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "description" } }, [
+                            _vm._v("Description")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.description,
+                                expression: "form.description"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "text",
+                              id: "description",
+                              name: "description",
+                              placeholder: "Enter description.."
+                            },
+                            domProps: { value: _vm.form.description },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.form,
+                                  "description",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group row" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "col-12",
+                              attrs: { for: "file-input" }
+                            },
+                            [_vm._v("File Upload")]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-12" }, [
+                            _c("input", {
+                              attrs: {
+                                required: "",
+                                type: "file",
+                                id: "file-input",
+                                name: "file-input"
+                              },
+                              on: { change: _vm.selectPdf }
+                            })
+                          ])
+                        ])
+                      ])
                     ]
                   ),
                   _vm._v(" "),
@@ -642,72 +866,6 @@ var staticRenderFns = [
           }
         },
         [_c("i", { staticClass: "si si-close" })]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "block-content" }, [
-      _c(
-        "form",
-        {
-          attrs: {
-            action: "be_forms_elements_bootstrap.html",
-            method: "post",
-            onsubmit: "return false;"
-          }
-        },
-        [
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "email" } }, [_vm._v("Title")]),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "email",
-                name: "email",
-                placeholder: "Enter title.."
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "description" } }, [
-              _vm._v("Description")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "description",
-                name: "description",
-                placeholder: "Enter description.."
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group row" }, [
-            _c(
-              "label",
-              { staticClass: "col-12", attrs: { for: "example-file-input" } },
-              [_vm._v("File Upload")]
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-12" }, [
-              _c("input", {
-                attrs: {
-                  type: "file",
-                  id: "example-file-input",
-                  name: "example-file-input"
-                }
-              })
-            ])
-          ])
-        ]
       )
     ])
   }

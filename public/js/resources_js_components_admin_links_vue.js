@@ -131,24 +131,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       currentPage: 1,
       perPage: 5,
-      items: [],
       fields: ['#', {
-        key: 'titile'
-      }, {
-        key: 'description'
-      }, 'created_at', {
+        key: 'title'
+      }, 'link', 'description', 'open_in_new_tab', 'created_at', {
         key: 'actions',
         label: 'Actions'
       }],
-      links: [{}],
+      links: [],
       filter: null,
       filterOn: [],
-      form: new Form({}),
+      form: new Form({
+        id: '',
+        title: '',
+        link: '',
+        description: '',
+        open_in_new_tab: false
+      }),
       editMode: false
     };
   },
@@ -162,20 +177,97 @@ __webpack_require__.r(__webpack_exports__);
       $('#modal').modal('show');
       this.form.fill(link);
     },
-    updateLink: function updateLink() {},
+    updateLink: function updateLink() {
+      var _this = this;
+
+      this.form.put('/api/links/' + this.form.id).then(function (_ref) {
+        var data = _ref.data;
+
+        // console.log(data);
+        if (data.success) {
+          toast.fire({
+            icon: "success",
+            title: "Link updated successfully"
+          });
+          $('#modal-large').modal('hide');
+
+          _this.form.reset();
+
+          _this.getLinks();
+        }
+      });
+    },
     openModal: function openModal() {
       this.editMode = false;
       $('#modal-large').modal('show');
+      this.form.reset();
     },
-    openEditModal: function openEditModal() {
+    openEditModal: function openEditModal(link) {
       this.editMode = true;
       $('#modal-large').modal('show');
+      this.form.fill(link);
     },
     onFiltered: function onFiltered(filteredItems) {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getLinks: function getLinks() {}
+    addLink: function addLink() {
+      var _this2 = this;
+
+      this.form.post("/api/links").then(function (_ref2) {
+        var data = _ref2.data;
+
+        if (data.success) {
+          _this2.form.reset();
+
+          toast.fire({
+            icon: "success",
+            title: "Link added successfully"
+          });
+          $("#modal-large").modal("hide");
+
+          _this2.getLinks();
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    getLinks: function getLinks() {
+      var _this3 = this;
+
+      axios.get("/api/links").then(function (_ref3) {
+        var data = _ref3.data;
+        // console.log(data);
+        _this3.links = data.data;
+        _this3.totalRows = _this3.links.length;
+      })["catch"](function (e) {
+        console.log(error);
+      });
+    },
+    deleteLink: function deleteLink(id) {
+      var _this4 = this;
+
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        // send request
+        if (result.value) {
+          _this4.form["delete"]("/api/links/" + id).then(function () {
+            Swal.fire("Deleted!", "Link has been deleted.", "success");
+
+            _this4.getLinks();
+          })["catch"](function () {
+            Swal.fire("Failed to delete link.", "Failed", 'error');
+          });
+        }
+      });
+    }
   },
   created: function created() {
     this.getLinks();
@@ -286,7 +378,7 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("\n                    Add Links\n                ")]
+            [_vm._v("\n                        Add Link\n                ")]
           )
         ]),
         _vm._v(" "),
@@ -309,7 +401,7 @@ var render = function() {
                     [
                       _c("label", [
                         _vm._v(
-                          "\n                                    Show\n                                    "
+                          "\n                                        Show\n                                        "
                         ),
                         _c(
                           "select",
@@ -363,7 +455,7 @@ var render = function() {
                           ]
                         ),
                         _vm._v(
-                          "\n                                    entries\n                                "
+                          "\n                                        entries\n                                    "
                         )
                       ])
                     ]
@@ -438,23 +530,50 @@ var render = function() {
                           }
                         },
                         {
+                          key: "cell(created_at)",
+                          fn: function(row) {
+                            return [
+                              _c("p", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("filterDateOnly")(
+                                      row.item.created_at
+                                    )
+                                  )
+                                )
+                              ])
+                            ]
+                          }
+                        },
+                        {
+                          key: "cell(open_in_new_tab)",
+                          fn: function(row) {
+                            return [
+                              row.item.open_in_new_tab == 1
+                                ? _c("p", [_vm._v("True")])
+                                : _c("p", [_vm._v("False")])
+                            ]
+                          }
+                        },
+                        {
                           key: "cell(actions)",
                           fn: function(row) {
                             return [
                               _c(
-                                "b-button",
+                                "a",
                                 {
-                                  staticClass: "btn btn-sm",
-                                  attrs: { variant: "primary" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.openVIewModal(row.item)
-                                    }
+                                  staticClass: "btn btn-primary btn-sm",
+                                  attrs: {
+                                    href: row.item.link,
+                                    target:
+                                      row.item.open_in_new_tab == 1
+                                        ? "_blank"
+                                        : "_self"
                                   }
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                        View\n                                    "
+                                    "\n                                        Open\n                                    "
                                   )
                                 ]
                               ),
@@ -473,6 +592,24 @@ var render = function() {
                                 [
                                   _vm._v(
                                     "\n                                        Edit\n                                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-button",
+                                {
+                                  staticClass: "btn btn-sm",
+                                  attrs: { variant: "danger" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteLink(row.item.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                        Delete\n                                    "
                                   )
                                 ]
                               )
@@ -546,7 +683,7 @@ var render = function() {
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
-                      return _vm.updateLink.apply(null, arguments)
+                      _vm.editMode ? _vm.updateLink() : _vm.addLink()
                     }
                   }
                 },
@@ -573,7 +710,200 @@ var render = function() {
                         ]
                       ),
                       _vm._v(" "),
-                      _vm._m(2)
+                      _c("div", { staticClass: "block-content" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "email" } }, [
+                            _vm._v("Title")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.title,
+                                expression: "form.title"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "text",
+                              id: "title",
+                              name: "title",
+                              placeholder: "Enter title.."
+                            },
+                            domProps: { value: _vm.form.title },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.form, "title", $event.target.value)
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "description" } }, [
+                            _vm._v("Link")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.link,
+                                expression: "form.link"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "url",
+                              id: "link",
+                              name: "link",
+                              placeholder: "Enter link.."
+                            },
+                            domProps: { value: _vm.form.link },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.form, "link", $event.target.value)
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "description" } }, [
+                            _vm._v("Description")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.description,
+                                expression: "form.description"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "text",
+                              id: "description",
+                              name: "description",
+                              placeholder: "Enter description.."
+                            },
+                            domProps: { value: _vm.form.description },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.form,
+                                  "description",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group row" }, [
+                          _c("label", { staticClass: "col-12" }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-12" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "custom-control custom-checkbox custom-control-inline mb-5"
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.open_in_new_tab,
+                                      expression: "form.open_in_new_tab"
+                                    }
+                                  ],
+                                  staticClass: "custom-control-input",
+                                  attrs: {
+                                    type: "checkbox",
+                                    name: "example-inline-checkbox1",
+                                    id: "example-inline-checkbox1",
+                                    value: "option1",
+                                    checked: ""
+                                  },
+                                  domProps: {
+                                    checked: Array.isArray(
+                                      _vm.form.open_in_new_tab
+                                    )
+                                      ? _vm._i(
+                                          _vm.form.open_in_new_tab,
+                                          "option1"
+                                        ) > -1
+                                      : _vm.form.open_in_new_tab
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$a = _vm.form.open_in_new_tab,
+                                        $$el = $event.target,
+                                        $$c = $$el.checked ? true : false
+                                      if (Array.isArray($$a)) {
+                                        var $$v = "option1",
+                                          $$i = _vm._i($$a, $$v)
+                                        if ($$el.checked) {
+                                          $$i < 0 &&
+                                            _vm.$set(
+                                              _vm.form,
+                                              "open_in_new_tab",
+                                              $$a.concat([$$v])
+                                            )
+                                        } else {
+                                          $$i > -1 &&
+                                            _vm.$set(
+                                              _vm.form,
+                                              "open_in_new_tab",
+                                              $$a
+                                                .slice(0, $$i)
+                                                .concat($$a.slice($$i + 1))
+                                            )
+                                        }
+                                      } else {
+                                        _vm.$set(
+                                          _vm.form,
+                                          "open_in_new_tab",
+                                          $$c
+                                        )
+                                      }
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "label",
+                                  {
+                                    staticClass: "custom-control-label",
+                                    attrs: { for: "example-inline-checkbox1" }
+                                  },
+                                  [_vm._v("Open in a new tab")]
+                                )
+                              ]
+                            )
+                          ])
+                        ])
+                      ])
                     ]
                   ),
                   _vm._v(" "),
@@ -645,87 +975,6 @@ var staticRenderFns = [
           }
         },
         [_c("i", { staticClass: "si si-close" })]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "block-content" }, [
-      _c(
-        "form",
-        {
-          attrs: {
-            action: "be_forms_elements_bootstrap.html",
-            method: "post",
-            onsubmit: "return false;"
-          }
-        },
-        [
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "email" } }, [_vm._v("Title")]),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "title",
-                name: "title",
-                placeholder: "Enter title.."
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "description" } }, [_vm._v("Link")]),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "link",
-                name: "link",
-                placeholder: "Enter link.."
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group row" }, [
-            _c("label", { staticClass: "col-12" }),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-12" }, [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "custom-control custom-checkbox custom-control-inline mb-5"
-                },
-                [
-                  _c("input", {
-                    staticClass: "custom-control-input",
-                    attrs: {
-                      type: "checkbox",
-                      name: "example-inline-checkbox1",
-                      id: "example-inline-checkbox1",
-                      value: "option1",
-                      checked: ""
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "label",
-                    {
-                      staticClass: "custom-control-label",
-                      attrs: { for: "example-inline-checkbox1" }
-                    },
-                    [_vm._v("Open in a new tab")]
-                  )
-                ]
-              )
-            ])
-          ])
-        ]
       )
     ])
   }

@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::apiResources([
+    'pdfs' => 'PdfController',
+    'snippets' => 'SnippetController',
+    'links' => 'LinkController',
+]);
+
+// dashboardstats
+Route::get('dashboardstats','HomeController@getDashboardStats');
+
+Route::get('gethomedata','VisitorsController@getHomeData');

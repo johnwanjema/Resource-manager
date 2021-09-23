@@ -1,4 +1,4 @@
-    <template>
+<template>
     <section>
         <div class="content">
             <h2 class="content-heading">Links</h2>
@@ -6,7 +6,7 @@
                 <div class="block-header block-header-default">
                     <h3 class="block-title"><small></small></h3>
                     <button class="btn btn-success" @click="openModal()">
-                        Add Links
+                            Add Link
                     </button>
                 </div>
                 <div class="block-content block-content-full">
@@ -15,15 +15,15 @@
                             <div class="col-sm-12 col-md-6">
                                 <div class="dataTables_length" id="DataTables_Table_1_length">
                                     <label>
-                                        Show
-                                        <select v-model="perPage" name="DataTables_Table_1_length" aria-controls="DataTables_Table_1" class="custom-select custom-select-sm form-control form-control-sm">
-                                            <option value="5">5</option>
-                                            <option value="8">8</option>
-                                            <option value="15">15</option>
-                                            <option value="20">20</option>
-                                        </select>
-                                        entries
-                                    </label>
+                                            Show
+                                            <select v-model="perPage" name="DataTables_Table_1_length" aria-controls="DataTables_Table_1" class="custom-select custom-select-sm form-control form-control-sm">
+                                                <option value="5">5</option>
+                                                <option value="8">8</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                            </select>
+                                            entries
+                                        </label>
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-6">
@@ -36,15 +36,25 @@
                             <div class="col-sm-12">
                                 <b-table responsive striped hover show-empty :items="links" :fields="fields" :per-page="perPage" :current-page="currentPage" :filter="filter" :filterIncludedFields="filterOn" @filtered="onFiltered">
                                     <template v-slot:cell(#)="row">
-                                        <p>{{row.index + 1}}</p>
+                                            <p>{{row.index + 1}}</p>
                                     </template>
 
+                                    <template v-slot:cell(created_at)="row">
+                                        <p>{{row.item.created_at |filterDateOnly}}</p>
+                                    </template>
+                                    <template v-slot:cell(open_in_new_tab)="row">
+                                        <p v-if="row.item.open_in_new_tab == 1">True</p>
+                                        <p v-else>False</p>
+                                    </template>
                                     <template v-slot:cell(actions)="row">
-                                        <b-button class="btn btn-sm" variant="primary" @click="openVIewModal(row.item)">
-                                            View
-                                        </b-button>
+                                        <a class="btn btn-primary btn-sm" :href='row.item.link'  :target='row.item.open_in_new_tab == 1 ? "_blank" : "_self"'>
+                                            Open
+                                        </a>
                                         <b-button class="btn btn-sm" variant="warning" @click="openEditModal(row.item)">
                                             Edit
+                                        </b-button>
+                                        <b-button class="btn btn-sm" variant="danger" @click="deleteLink(row.item.id)">
+                                            Delete
                                         </b-button>
                                     </template>
                                 </b-table>
@@ -67,7 +77,7 @@
         <div class="modal" id="modal-large" tabindex="-1" role="dialog" aria-labelledby="modal-large" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <form @submit.prevent="updateLink">
+                    <form @submit.prevent="editMode? updateLink() : addLink()">
                         <div class="block block-themed block-transparent mb-0">
                             <div class="block-header bg-primary-dark">
                                 <h3 v-if="editMode" class="block-title">Edit Link</h3>
@@ -79,26 +89,28 @@
                                 </div>
                             </div>
                             <div class="block-content">
-                                <form action="be_forms_elements_bootstrap.html" method="post" onsubmit="return false;">
                                     <div class="form-group">
                                         <label for="email">Title</label>
-                                        <input type="text" class="form-control" id="title" name="title" placeholder="Enter title.." />
+                                        <input required v-model="form.title" type="text" class="form-control" id="title" name="title" placeholder="Enter title.." />
                                     </div>
                                     <div class="form-group">
                                         <label for="description">Link</label>
-                                        <input type="text" class="form-control" id="link" name="link" placeholder="Enter link.." />
+                                        <input required v-model="form.link" type="url" class="form-control" id="link" name="link" placeholder="Enter link.." />
+                                    </div>
+                                     <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <input required v-model="form.description" type="text" class="form-control" id="description" name="description" placeholder="Enter description.." />
                                     </div>
                                    <div class="form-group row">
                                         <label class="col-12"></label>
                                         <div class="col-12">
                                             <div class="custom-control custom-checkbox custom-control-inline mb-5">
-                                            <input class="custom-control-input" type="checkbox" name="example-inline-checkbox1" id="example-inline-checkbox1" value="option1" checked="">
+                                            <input  v-model="form.open_in_new_tab" class="custom-control-input" type="checkbox" name="example-inline-checkbox1" id="example-inline-checkbox1" value="option1" checked="">
                                             <label class="custom-control-label" for="example-inline-checkbox1">Open in a new tab</label>
                                             </div>
                                             
                                         </div>
                                     </div>
-                                </form>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -124,13 +136,16 @@ export default {
         return {
             currentPage: 1,
             perPage: 5,
-            items: [],
-            fields: ['#', { key: 'titile', }, { key: 'description', }, 'created_at', { key: 'actions', label: 'Actions' }],
-            links: [{}],
+            fields: ['#', { key: 'title', }, 'link','description','open_in_new_tab','created_at', { key: 'actions', label: 'Actions' }],
+            links: [],
             filter: null,
             filterOn: [],
             form: new Form({
-
+                id: '',
+                title: '',
+                link: '',
+                description:'',
+                open_in_new_tab: false
             }),
             editMode: false
         }
@@ -146,23 +161,87 @@ export default {
             this.form.fill(link)
         },
         updateLink() {
-
+            this.form.put('/api/links/' + this.form.id)
+                .then(({ data }) => {
+                    // console.log(data);
+                    if(data.success){
+                        toast.fire({
+                        icon: "success",
+                        title: "Link updated successfully"
+                        });
+                        $('#modal-large').modal('hide');
+                        this.form.reset();
+                        this.getLinks();
+                    }
+                });
         },
         openModal() {
             this.editMode = false;
             $('#modal-large').modal('show');
+            this.form.reset();
         },
-        openEditModal() {
+        openEditModal(link) {
             this.editMode = true;
             $('#modal-large').modal('show');
+            this.form.fill(link);
         },
         onFiltered(filteredItems) {
             this.totalRows = filteredItems.length;
             this.currentPage = 1
         },
+        addLink() {
+            this.form
+                .post("/api/links")
+                .then(({ data }) => {
+                    if (data.success) {
+                        this.form.reset();
+                        toast.fire({
+                            icon: "success",
+                            title: "Link added successfully"
+                        });
+                        $("#modal-large").modal("hide");
+                        this.getLinks();
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
         getLinks() {
-
-        }
+            axios.get("/api/links" )
+                .then(({data}) => {
+                    // console.log(data);
+                    this.links = data.data;
+                    this.totalRows = this.links.length;
+                })
+                .catch((e) => {
+                    console.log(error)
+                });
+        },
+        deleteLink(id) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then(result => {
+                // send request
+                if (result.value) {
+                    this.form
+                        .delete("/api/links/" + id)
+                        .then(() => {
+                            Swal.fire("Deleted!", "Link has been deleted.", "success");
+                            this.getLinks();
+                        })
+                        .catch(() => {
+                            Swal.fire("Failed to delete link.", "Failed",'error');
+                        });
+                }
+            });
+        },
     },
     created() {
         this.getLinks();
