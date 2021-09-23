@@ -14,7 +14,8 @@ class PdfController extends Controller
      */
     public function index()
     {
-       
+        $pdfs = Pdf::orderBY('created_at','DESC')->get();
+        return api_response(true,null, 200, 'success','successfully fetched all pdfs', $pdfs);
     }
 
     /**
@@ -51,7 +52,7 @@ class PdfController extends Controller
                 $filename  = $file->getClientOriginalName();
                 $extension = $file->getClientOriginalExtension();
                 $pdf   = date('His') . '-' . $filename;
-                $file->move(public_path('resourceImages'), $pdf);
+                $file->move(public_path('PDF'), $pdf);
                 $resource->storageLink  = $pdf;
             }
 
