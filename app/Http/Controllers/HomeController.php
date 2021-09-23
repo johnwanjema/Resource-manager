@@ -29,16 +29,21 @@ class HomeController extends Controller
         return view('home');
     }
 
-    public function getDashboardStats(){
-        $data = [];
-        $pdfs = Pdf::All()->count();
-        $snippets = Snippet::All()->count();
-        $links = Link::All()->count();
-        $data = [     
-                'pdfs'=> $pdfs,
-                'snippets'=> $snippets,
-                'links'=> $links,
+    public function getDashboardStats()
+    {
+        try {
+            $data = [];
+            $pdfs = Pdf::All()->count();
+            $snippets = Snippet::All()->count();
+            $links = Link::All()->count();
+            $data = [
+                'pdfs' => $pdfs,
+                'snippets' => $snippets,
+                'links' => $links,
             ];
-        return api_response(true, null, 0, 'success','successfully deleted student', $data);
+            return api_response(true, null, 0, 'success', 'successfully fetched data', $data);
+        } catch (\Exception $exception) {
+            return api_response(false, $exception->getMessage(), 200, 'error', 'error getting data', null);
+        }
     }
 }
