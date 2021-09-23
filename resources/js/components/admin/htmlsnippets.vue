@@ -224,7 +224,9 @@ export default {
                         this.getSnippets();
                     }
                 })
-                .catch(() => {});
+                .catch((error) => {
+                    console.log(error);
+                });
         },
         deleteSnippet(id) {
             Swal.fire({

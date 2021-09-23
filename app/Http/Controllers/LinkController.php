@@ -14,7 +14,8 @@ class LinkController extends Controller
      */
     public function index()
     {
-        //
+        $links = Link::orderBY('created_at', 'DESC')->get();
+        return api_response(true, null, 200, 'success', 'successfully fetched all links', $links);
     }
 
     /**
@@ -35,7 +36,27 @@ class LinkController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $this->validate($request, [
+                'title' => 'required',
+                'link' => 'required',
+                'open_in_new_tab' => 'required',
+            ]);
+
+            $link = new Link();
+            $link->title = $request['title'];
+            $link->link = $request['link'];
+            $link->open_in_new_tab = $request['open_in_new_tab'];
+
+
+            if ($link->save()) {
+                return api_response(true, null, 200, 'success', 'successfully saved Link', $link);
+            } else {
+                return api_response(false, null, 200, 'success', 'successfully saved Link', $link);
+            }
+        } catch (\Exception $exception) {
+            return api_response(false, $exception->getMessage(), 200, 'error', 'error saving Link`', null);
+        }
     }
 
     /**

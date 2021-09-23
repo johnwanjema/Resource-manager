@@ -250,7 +250,9 @@ __webpack_require__.r(__webpack_exports__);
 
           _this3.getSnippets();
         }
-      })["catch"](function () {});
+      })["catch"](function (error) {
+        console.log(error);
+      });
     },
     deleteSnippet: function deleteSnippet(id) {
       var _this4 = this;
