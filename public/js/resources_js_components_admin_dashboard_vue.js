@@ -75,196 +75,206 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "content" }, [
-      _c(
-        "div",
-        {
-          staticClass: "row js-appear-enabled animated fadeIn",
-          attrs: { "data-toggle": "appear" }
-        },
-        [
-          _c("div", { staticClass: "col-6 col-xl-4" }, [
-            _c(
-              "a",
-              {
-                staticClass:
-                  "block block-rounded block-bordered block-link-shadow",
-                attrs: { href: "javascript:void(0)" }
-              },
-              [
-                _c(
-                  "div",
-                  { staticClass: "block-content block-content-full clearfix" },
-                  [
-                    _c(
-                      "div",
-                      { staticClass: "float-right mt-15 d-none d-sm-block" },
-                      [
-                        _c("i", {
-                          staticClass: "si si-bag fa-2x text-primary-light"
-                        })
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "font-size-h3 font-w600 text-primary js-count-to-enabled",
-                        attrs: {
-                          "data-toggle": "countTo",
-                          "data-speed": "1000",
-                          "data-to": "1500"
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                        1500\n                    "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "font-size-sm font-w600 text-uppercase text-muted"
-                      },
-                      [
-                        _vm._v(
-                          "\n                        PDFS\n                    "
-                        )
-                      ]
-                    )
-                  ]
-                )
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-6 col-xl-4" }, [
-            _c(
-              "a",
-              {
-                staticClass:
-                  "block block-rounded block-bordered block-link-shadow",
-                attrs: { href: "javascript:void(0)" }
-              },
-              [
-                _c(
-                  "div",
-                  { staticClass: "block-content block-content-full clearfix" },
-                  [
-                    _c(
-                      "div",
-                      { staticClass: "float-right mt-15 d-none d-sm-block" },
-                      [
-                        _c("i", {
-                          staticClass: "si si-wallet fa-2x text-earth-light"
-                        })
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "font-size-h3 font-w600 text-earth" },
-                      [
-                        _vm._v("$"),
-                        _c(
-                          "span",
-                          {
-                            staticClass: "js-count-to-enabled",
-                            attrs: {
-                              "data-toggle": "countTo",
-                              "data-speed": "1000",
-                              "data-to": "780"
-                            }
-                          },
-                          [_vm._v("780")]
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "font-size-sm font-w600 text-uppercase text-muted"
-                      },
-                      [
-                        _vm._v(
-                          "\n                        HTML snippet\n                    "
-                        )
-                      ]
-                    )
-                  ]
-                )
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-6 col-xl-4" }, [
-            _c(
-              "a",
-              {
-                staticClass:
-                  "block block-rounded block-bordered block-link-shadow",
-                attrs: { href: "javascript:void(0)" }
-              },
-              [
-                _c(
-                  "div",
-                  { staticClass: "block-content block-content-full clearfix" },
-                  [
-                    _c(
-                      "div",
-                      { staticClass: "float-right mt-15 d-none d-sm-block" },
-                      [
-                        _c("i", {
+    return _c(
+      "div",
+      { staticClass: "content", staticStyle: { "padding-top": "68px" } },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "row js-appear-enabled animated fadeIn",
+            attrs: { "data-toggle": "appear" }
+          },
+          [
+            _c("div", { staticClass: "col-6 col-xl-4" }, [
+              _c(
+                "a",
+                {
+                  staticClass:
+                    "block block-rounded block-bordered block-link-shadow",
+                  attrs: { href: "javascript:void(0)" }
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "block-content block-content-full clearfix"
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "float-right mt-15 d-none d-sm-block" },
+                        [
+                          _c("i", {
+                            staticClass: "si si-bag fa-2x text-primary-light"
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
                           staticClass:
-                            "si si-envelope-open fa-2x text-elegance-light"
-                        })
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "font-size-h3 font-w600 text-elegance js-count-to-enabled",
-                        attrs: {
-                          "data-toggle": "countTo",
-                          "data-speed": "1000",
-                          "data-to": "15"
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                        15\n                    "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "font-size-sm font-w600 text-uppercase text-muted"
-                      },
-                      [
-                        _vm._v(
-                          "\n                        Links\n                    "
-                        )
-                      ]
-                    )
-                  ]
-                )
-              ]
-            )
-          ])
-        ]
-      )
-    ])
+                            "font-size-h3 font-w600 text-primary js-count-to-enabled",
+                          attrs: {
+                            "data-toggle": "countTo",
+                            "data-speed": "1000",
+                            "data-to": "1500"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        1500\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "font-size-sm font-w600 text-uppercase text-muted"
+                        },
+                        [
+                          _vm._v(
+                            "\n                        PDFS\n                    "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-6 col-xl-4" }, [
+              _c(
+                "a",
+                {
+                  staticClass:
+                    "block block-rounded block-bordered block-link-shadow",
+                  attrs: { href: "javascript:void(0)" }
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "block-content block-content-full clearfix"
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "float-right mt-15 d-none d-sm-block" },
+                        [
+                          _c("i", {
+                            staticClass: "si si-wallet fa-2x text-earth-light"
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "font-size-h3 font-w600 text-earth" },
+                        [
+                          _vm._v("$"),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "js-count-to-enabled",
+                              attrs: {
+                                "data-toggle": "countTo",
+                                "data-speed": "1000",
+                                "data-to": "780"
+                              }
+                            },
+                            [_vm._v("780")]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "font-size-sm font-w600 text-uppercase text-muted"
+                        },
+                        [
+                          _vm._v(
+                            "\n                        HTML snippet\n                    "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-6 col-xl-4" }, [
+              _c(
+                "a",
+                {
+                  staticClass:
+                    "block block-rounded block-bordered block-link-shadow",
+                  attrs: { href: "javascript:void(0)" }
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "block-content block-content-full clearfix"
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "float-right mt-15 d-none d-sm-block" },
+                        [
+                          _c("i", {
+                            staticClass:
+                              "si si-envelope-open fa-2x text-elegance-light"
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "font-size-h3 font-w600 text-elegance js-count-to-enabled",
+                          attrs: {
+                            "data-toggle": "countTo",
+                            "data-speed": "1000",
+                            "data-to": "15"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        15\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "font-size-sm font-w600 text-uppercase text-muted"
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Links\n                    "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ]
+              )
+            ])
+          ]
+        )
+      ]
+    )
   }
 ]
 render._withStripped = true

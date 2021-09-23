@@ -1,5 +1,5 @@
 <template>
-    <div class="content">
+    <div class="content" style="padding-top:68px">
         <div class="row js-appear-enabled animated fadeIn" data-toggle="appear">
             <div class="col-6 col-xl-4">
                 <a class="block block-rounded block-bordered block-link-shadow" href="javascript:void(0)">
