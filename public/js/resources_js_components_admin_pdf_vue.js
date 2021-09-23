@@ -124,6 +124,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -131,7 +134,7 @@ __webpack_require__.r(__webpack_exports__);
       perPage: 5,
       items: [],
       fields: ['#', {
-        key: 'titile'
+        key: 'title'
       }, {
         key: 'description'
       }, 'created_at', {
@@ -156,10 +159,6 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    openVIewModal: function openVIewModal(pdf) {
-      $('#modal').modal('show');
-      this.form.fill(pdf);
-    },
     updatePDf: function updatePDf() {},
     selectPdf: function selectPdf(event) {
       this.form.pdf = event.target.files[0];
@@ -177,15 +176,19 @@ __webpack_require__.r(__webpack_exports__);
       this.currentPage = 1;
     },
     getPdfs: function getPdfs() {
+      var _this = this;
+
       axios.get("/api/pdfs").then(function (_ref) {
         var data = _ref.data;
         console.log(data);
+        _this.pdfs = data.data;
+        _this.totalRows = _this.pdfs.length;
       })["catch"](function (e) {
         console.log(error);
       });
     },
     addpdf: function addpdf() {
-      var _this = this;
+      var _this2 = this;
 
       var data = new FormData();
       data.append('title', this.form.title);
@@ -203,11 +206,11 @@ __webpack_require__.r(__webpack_exports__);
         if (data.success) {
           $('#modal-large').modal('hide');
 
-          _this.form.reset();
+          _this2.form.reset();
 
           Swal.fire("Success!", "Resource added successfully", "success");
 
-          _this.getPdfs();
+          _this2.getPdfs();
         }
       });
     }
@@ -473,18 +476,32 @@ var render = function() {
                           }
                         },
                         {
+                          key: "cell(created_at)",
+                          fn: function(row) {
+                            return [
+                              _c("p", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("filterDateOnly")(
+                                      row.item.created_at
+                                    )
+                                  )
+                                )
+                              ])
+                            ]
+                          }
+                        },
+                        {
                           key: "cell(actions)",
                           fn: function(row) {
                             return [
                               _c(
-                                "b-button",
+                                "a",
                                 {
-                                  staticClass: "btn btn-sm",
-                                  attrs: { variant: "primary" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.openVIewModal(row.item)
-                                    }
+                                  staticClass: "btn btn-success btn-sm",
+                                  attrs: {
+                                    href: "/PDF/" + row.item.storageLink,
+                                    target: "_blank"
                                   }
                                 },
                                 [

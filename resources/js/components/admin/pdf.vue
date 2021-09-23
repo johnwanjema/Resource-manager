@@ -38,11 +38,14 @@
                                     <template v-slot:cell(#)="row">
                                             <p>{{row.index + 1}}</p>
                                     </template>
+                                    <template v-slot:cell(created_at)="row">
+                                        <p>{{row.item.created_at |filterDateOnly}}</p>
+                                    </template>
 
                                     <template v-slot:cell(actions)="row">
-                                        <b-button class="btn btn-sm" variant="primary" @click="openVIewModal(row.item)">
+                                        <a class="btn btn-success btn-sm"  :href="'/PDF/'+ row.item.storageLink" target="_blank">
                                             View
-                                        </b-button>
+                                        </a>
                                         <b-button class="btn btn-sm" variant="warning" @click="openEditModal(row.item)">
                                             Edit
                                         </b-button>
@@ -118,7 +121,7 @@ export default {
             currentPage: 1,
             perPage: 5,
             items: [],
-            fields: ['#', { key: 'titile', }, { key: 'description', }, 'created_at', { key: 'actions', label: 'Actions' }],
+            fields: ['#', { key: 'title', }, { key: 'description', }, 'created_at', { key: 'actions', label: 'Actions' }],
             pdfs: [{}],
             filter: null,
             filterOn: [],
@@ -137,10 +140,6 @@ export default {
         }
     },
     methods: {
-        openVIewModal(pdf) {
-            $('#modal').modal('show');
-            this.form.fill(pdf)
-        },
         updatePDf() {
 
         },
@@ -163,6 +162,8 @@ export default {
             axios.get("/api/pdfs" )
                 .then(({data}) => {
                     console.log(data);
+                    this.pdfs = data.data;
+                    this.totalRows = this.pdfs.length;
                 })
                 .catch((e) => {
                     console.log(error)
