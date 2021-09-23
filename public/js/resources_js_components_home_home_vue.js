@@ -64,6 +64,13 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (e) {
         console.log(error);
       });
+    },
+    copyToClipboard: function copyToClipboard(snippet) {
+      navigator.clipboard.writeText(snippet);
+      toast.fire({
+        icon: "success",
+        title: "Copied the snippet "
+      });
     }
   },
   created: function created() {
@@ -191,9 +198,12 @@ var render = function() {
                         {
                           staticClass: "btn btn-primary",
                           staticStyle: { float: "right" },
-                          attrs: { href: "#" }
+                          attrs: {
+                            href: "/PDF/" + item.storageLink,
+                            download: item.title
+                          }
                         },
-                        [_vm._v("PDF")]
+                        [_vm._v("Download")]
                       )
                     : _vm._e(),
                   _vm._v(" "),
@@ -203,9 +213,14 @@ var render = function() {
                         {
                           staticClass: "btn btn-primary",
                           staticStyle: { float: "right" },
-                          attrs: { href: "#" }
+                          attrs: { href: "javascript:void(0)" },
+                          on: {
+                            click: function($event) {
+                              return _vm.copyToClipboard(item.snippet)
+                            }
+                          }
                         },
-                        [_vm._v("HTml")]
+                        [_vm._v("Copy to clipboard")]
                       )
                     : _vm._e(),
                   _vm._v(" "),
@@ -215,9 +230,13 @@ var render = function() {
                         {
                           staticClass: "btn btn-primary",
                           staticStyle: { float: "right" },
-                          attrs: { href: "#" }
+                          attrs: {
+                            href: item.link,
+                            target:
+                              item.open_in_new_tab == 1 ? "_blank" : "_self"
+                          }
                         },
-                        [_vm._v("Link")]
+                        [_vm._v("Open link")]
                       )
                     : _vm._e()
                 ])

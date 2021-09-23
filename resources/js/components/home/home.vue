@@ -8,9 +8,9 @@
                         <p class="card-text">
                             {{item.description}}
                         </p>
-                        <a v-if="item.storageLink" style="float:right" href="#" class="btn btn-primary">PDF</a>
-                        <a v-if="item.snippet" style="float:right" href="#" class="btn btn-primary">HTml</a>
-                        <a v-if="item.link" style="float:right" href="#" class="btn btn-primary">Link</a>
+                        <a v-if="item.storageLink" style="float:right" class="btn btn-primary" :href="'/PDF/'+ item.storageLink" :download="item.title">Download</a>
+                        <a v-if="item.snippet" style="float:right" href="javascript:void(0)" class="btn btn-primary" @click="copyToClipboard(item.snippet)">Copy to clipboard</a>
+                        <a v-if="item.link" style="float:right"  :href='item.link'  :target='item.open_in_new_tab == 1 ? "_blank" : "_self"' class="btn btn-primary">Open link</a>
                     </div>
                 </div>
             </div>
@@ -50,6 +50,13 @@ export default {
                 .catch((e) => {
                     console.log(error)
                 });
+        },
+        copyToClipboard(snippet) {
+            navigator.clipboard.writeText(snippet);
+            toast.fire({
+                icon: "success",
+                title: "Copied the snippet "
+            });
         }
     },
     created() {
