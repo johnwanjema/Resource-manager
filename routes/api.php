@@ -21,4 +21,5 @@ use Illuminate\Support\Facades\Route;
 Route::apiResources([
     'pdfs' => 'PdfController',
     'snippets' => 'SnippetController',
+    'links' => 'LinkController',
 ]);
