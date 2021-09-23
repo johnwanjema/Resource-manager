@@ -97,6 +97,10 @@
                                         <label for="description">Link</label>
                                         <input required v-model="form.link" type="url" class="form-control" id="link" name="link" placeholder="Enter link.." />
                                     </div>
+                                     <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <input required v-model="form.description" type="text" class="form-control" id="description" name="description" placeholder="Enter description.." />
+                                    </div>
                                    <div class="form-group row">
                                         <label class="col-12"></label>
                                         <div class="col-12">
@@ -132,7 +136,7 @@ export default {
         return {
             currentPage: 1,
             perPage: 5,
-            fields: ['#', { key: 'title', }, 'link','open_in_new_tab','created_at', { key: 'actions', label: 'Actions' }],
+            fields: ['#', { key: 'title', }, 'link','description','open_in_new_tab','created_at', { key: 'actions', label: 'Actions' }],
             links: [],
             filter: null,
             filterOn: [],
@@ -140,6 +144,7 @@ export default {
                 id: '',
                 title: '',
                 link: '',
+                description:'',
                 open_in_new_tab: false
             }),
             editMode: false

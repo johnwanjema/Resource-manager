@@ -40,12 +40,14 @@ class LinkController extends Controller
             $this->validate($request, [
                 'title' => 'required',
                 'link' => 'required',
+                'description' => 'required',
                 'open_in_new_tab' => 'required',
             ]);
 
             $link = new Link();
             $link->title = $request['title'];
             $link->link = $request['link'];
+            $link->description = $request['description'];
             $link->open_in_new_tab = $request['open_in_new_tab'];
 
 
@@ -97,7 +99,10 @@ class LinkController extends Controller
 
             if (isset($request['link']) && $request['link'] != "null")
                 $link->link = $request['link'];
-
+            
+            if (isset($request['description']) && $request['description'] != "null")
+                $link->description = $request['description'];
+                // description
 
             if (isset($request['open_in_new_tab'])&& $request['open_in_new_tab'] != "null")
                 $link->open_in_new_tab = $request['open_in_new_tab'];
