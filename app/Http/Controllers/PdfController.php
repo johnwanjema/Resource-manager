@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+
 
 class PdfController extends Controller
 {
@@ -14,8 +16,8 @@ class PdfController extends Controller
      */
     public function index()
     {
-        $pdfs = Pdf::orderBY('created_at','DESC')->get();
-        return api_response(true,null, 200, 'success','successfully fetched all pdfs', $pdfs);
+        $pdfs = Pdf::orderBY('created_at', 'DESC')->get();
+        return api_response(true, null, 200, 'success', 'successfully fetched all pdfs', $pdfs);
     }
 
     /**
@@ -58,12 +60,11 @@ class PdfController extends Controller
 
             $resource->status = 'available';
 
-            if($resource->save()){
+            if ($resource->save()) {
                 return api_response(true, null, 200, 'success', 'successfully saved PDF', $resource);
-            }else{
+            } else {
                 return api_response(false, null, 200, 'success', 'successfully saved PDF', $resource);
             }
-
         } catch (\Exception $exception) {
             return api_response(false, $exception->getMessage(), 200, 'error', 'error saving PDF', null);
         }
@@ -100,7 +101,40 @@ class PdfController extends Controller
      */
     public function update(Request $request, Pdf $pdf)
     {
-        //
+        try {
+
+            if (isset($request['title'])&& $request['title'] != "null")
+                $pdf->title = $request['title'];
+
+            if (isset($request['description']) && $request['description'] != "null")
+                $pdf->description = $request['description'];
+
+
+            if (isset($request['status'])&& $request['description'] != "null")
+                $pdf->status = $request['status'];
+
+
+            if ($request->hasFile('image')) {
+                //delete existing image
+                $imgWillDelete = public_path() . '/PDF/' . $pdf->imageUrl;
+                File::delete($imgWillDelete);
+
+                $file      = $request->file('pdf');
+                $filename  = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $picture   = date('His') . '-' . $filename;
+                $file->move(public_path('PDF'), $picture);
+                $pdf->imageUrl  = $picture;
+                // return $picture;
+            }
+
+
+            $pdf->save();
+
+            return api_response(true, null, 200, 'success', 'successfully updated PDF', $pdf);
+        } catch (\Exception $exception) {
+            return api_response(false, $exception->getMessage(), 200, 'error', 'error updating PDF', null);
+        }
     }
 
     /**

@@ -70,7 +70,7 @@
         <div class="modal" id="modal-large" tabindex="-1" role="dialog" aria-labelledby="modal-large" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <form @submit.prevent="addpdf">
+                    <form @submit.prevent="editMode ? updatePDf() : addpdf()">
                         <div class="block block-themed block-transparent mb-0">
                             <div class="block-header bg-primary-dark">
                                 <h3 v-if="editMode" class="block-title">Edit PDF</h3>
@@ -120,9 +120,8 @@ export default {
         return {
             currentPage: 1,
             perPage: 5,
-            items: [],
             fields: ['#', { key: 'title', }, { key: 'description', }, 'created_at', { key: 'actions', label: 'Actions' }],
-            pdfs: [{}],
+            pdfs: [],
             filter: null,
             filterOn: [],
             form: new Form({
@@ -131,7 +130,8 @@ export default {
                 description:'',
                 pdf: '',
             }),
-            editMode: false
+            editMode: false,
+            pdf:{}
         }
     },
     computed: {
@@ -141,18 +141,37 @@ export default {
     },
     methods: {
         updatePDf() {
-
+             axios.put("/api/pdfs/"+ this.pdf.id , this.form )
+                .then(({data}) => {
+                    if(data.success){
+                        toast.fire({
+                            icon: "success",
+                            title: "PDF updated successfully"
+                        });
+                        $('#modal-large').modal('hide');
+                        this.form.reset();
+                        document.getElementById("file-input").value = "";
+                        this.getPdfs();
+                    }
+                })
+                .catch((e) => {
+                    console.log(error)
+                });
         },
         selectPdf(event) {
             this.form.pdf = event.target.files[0];
         },
         openModal() {
+            this.form.reset()
             this.editMode = false;
             $('#modal-large').modal('show');
         },
-        openEditModal() {
+        openEditModal(pdf) {
             this.editMode = true;
+            this.pdf = pdf
             $('#modal-large').modal('show');
+            this.form.fill(pdf);
+            // document.getElementById("file-input").value = pdf.storageLink;
         },
         onFiltered(filteredItems) {
             this.totalRows = filteredItems.length;
@@ -186,7 +205,10 @@ export default {
                     $('#modal-large').modal('hide');
                     this.form.reset();
                     document.getElementById("file-input").value = "";
-                    Swal.fire("Success!", "Resource added successfully", "success");
+                    toast.fire({
+                        icon: "success",
+                        title: "PDF added successfully"
+                    });
                     this.getPdfs();
                 }
             });
@@ -194,6 +216,7 @@ export default {
     },
     created() {
         this.getPdfs();
+       
     }
 }
 </script>

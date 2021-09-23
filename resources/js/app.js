@@ -66,6 +66,14 @@ Vue.filter('humanize', function (value) {
 import tinymce from 'vue-tinymce-editor'
 Vue.component('tinymce', tinymce)
 
+const toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+  })
+  
+  window.toast = toast
 
 const app = new Vue({
     el: '#app',

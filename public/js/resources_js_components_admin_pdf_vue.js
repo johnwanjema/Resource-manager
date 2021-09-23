@@ -132,7 +132,6 @@ __webpack_require__.r(__webpack_exports__);
     return {
       currentPage: 1,
       perPage: 5,
-      items: [],
       fields: ['#', {
         key: 'title'
       }, {
@@ -141,7 +140,7 @@ __webpack_require__.r(__webpack_exports__);
         key: 'actions',
         label: 'Actions'
       }],
-      pdfs: [{}],
+      pdfs: [],
       filter: null,
       filterOn: [],
       form: new Form({
@@ -150,7 +149,8 @@ __webpack_require__.r(__webpack_exports__);
         description: '',
         pdf: ''
       }),
-      editMode: false
+      editMode: false,
+      pdf: {}
     };
   },
   computed: {
@@ -159,36 +159,61 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    updatePDf: function updatePDf() {},
+    updatePDf: function updatePDf() {
+      var _this = this;
+
+      axios.put("/api/pdfs/" + this.pdf.id, this.form).then(function (_ref) {
+        var data = _ref.data;
+
+        if (data.success) {
+          toast.fire({
+            icon: "success",
+            title: "PDF updated successfully"
+          });
+          $('#modal-large').modal('hide');
+
+          _this.form.reset();
+
+          document.getElementById("file-input").value = "";
+
+          _this.getPdfs();
+        }
+      })["catch"](function (e) {
+        console.log(error);
+      });
+    },
     selectPdf: function selectPdf(event) {
       this.form.pdf = event.target.files[0];
     },
     openModal: function openModal() {
+      this.form.reset();
       this.editMode = false;
       $('#modal-large').modal('show');
     },
-    openEditModal: function openEditModal() {
+    openEditModal: function openEditModal(pdf) {
       this.editMode = true;
+      this.pdf = pdf;
       $('#modal-large').modal('show');
+      this.form.fill(pdf); // document.getElementById("file-input").value = pdf.storageLink;
     },
     onFiltered: function onFiltered(filteredItems) {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
     getPdfs: function getPdfs() {
-      var _this = this;
+      var _this2 = this;
 
-      axios.get("/api/pdfs").then(function (_ref) {
-        var data = _ref.data;
+      axios.get("/api/pdfs").then(function (_ref2) {
+        var data = _ref2.data;
         console.log(data);
-        _this.pdfs = data.data;
-        _this.totalRows = _this.pdfs.length;
+        _this2.pdfs = data.data;
+        _this2.totalRows = _this2.pdfs.length;
       })["catch"](function (e) {
         console.log(error);
       });
     },
     addpdf: function addpdf() {
-      var _this2 = this;
+      var _this3 = this;
 
       var data = new FormData();
       data.append('title', this.form.title);
@@ -200,18 +225,21 @@ __webpack_require__.r(__webpack_exports__);
           'Accept-Language': 'en-US,en;q=0.8',
           'Content-Type': 'multipart/form-data'
         }
-      }).then(function (_ref2) {
-        var data = _ref2.data;
+      }).then(function (_ref3) {
+        var data = _ref3.data;
 
         if (data.success) {
           $('#modal-large').modal('hide');
 
-          _this2.form.reset();
+          _this3.form.reset();
 
           document.getElementById("file-input").value = "";
-          Swal.fire("Success!", "Resource added successfully", "success");
+          toast.fire({
+            icon: "success",
+            title: "PDF added successfully"
+          });
 
-          _this2.getPdfs();
+          _this3.getPdfs();
         }
       });
     }
@@ -599,7 +627,7 @@ var render = function() {
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
-                      return _vm.addpdf.apply(null, arguments)
+                      _vm.editMode ? _vm.updatePDf() : _vm.addpdf()
                     }
                   }
                 },
