@@ -23,3 +23,6 @@ Route::apiResources([
     'snippets' => 'SnippetController',
     'links' => 'LinkController',
 ]);
+
+Route::get('dashboardstats','HomeController@getDashboardStats');
+// dashboardstats
