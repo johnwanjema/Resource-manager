@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pdf extends Model
 {
-    protected $fillable=['title','description','imageUrl','status','storageLink'];
+    protected $fillable=['title','description','status','storageLink'];
 }

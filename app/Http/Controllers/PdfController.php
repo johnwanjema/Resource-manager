@@ -14,7 +14,7 @@ class PdfController extends Controller
      */
     public function index()
     {
-        //
+       
     }
 
     /**
@@ -35,7 +35,32 @@ class PdfController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // return $request->all();
+        try {
+            $resource = new Pdf();
+            $resource->title = $request['title'];
+            $resource->description = $request['description'];
+
+            if ($request->hasFile('pdf')) {
+                $file      = $request->file('pdf');
+                $filename  = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $pdf   = date('His') . '-' . $filename;
+                $file->move(public_path('resourceImages'), $pdf);
+                $resource->storageLink  = $pdf;
+            }
+
+            $resource->status = 'available';
+
+            if($resource->save()){
+                return api_response(true, null, 200, 'success', 'successfully saved PDF', $resource);
+            }else{
+                return api_response(false, null, 200, 'success', 'successfully saved PDF', $resource);
+            }
+
+        } catch (\Exception $exception) {
+            return api_response(false, $exception->getMessage(), 200, 'error', 'error saving PDF', null);
+        }
     }
 
     /**

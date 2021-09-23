@@ -124,10 +124,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -145,7 +141,12 @@ __webpack_require__.r(__webpack_exports__);
       pdfs: [{}],
       filter: null,
       filterOn: [],
-      form: new Form({}),
+      form: new Form({
+        id: '',
+        title: '',
+        description: '',
+        pdf: ''
+      }),
       editMode: false
     };
   },
@@ -160,6 +161,9 @@ __webpack_require__.r(__webpack_exports__);
       this.form.fill(pdf);
     },
     updatePDf: function updatePDf() {},
+    selectPdf: function selectPdf(event) {
+      this.form.pdf = event.target.files[0];
+    },
     openModal: function openModal() {
       this.editMode = false;
       $('#modal-large').modal('show');
@@ -172,10 +176,44 @@ __webpack_require__.r(__webpack_exports__);
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getPdf: function getPdf() {}
+    getPdfs: function getPdfs() {
+      axios.get("/api/pdfs").then(function (_ref) {
+        var data = _ref.data;
+        console.log(data);
+      })["catch"](function (e) {
+        console.log(error);
+      });
+    },
+    addpdf: function addpdf() {
+      var _this = this;
+
+      var data = new FormData();
+      data.append('title', this.form.title);
+      data.append('description', this.form.description);
+      data.append('pdf', this.form.pdf);
+      axios.post("/api/pdfs", data, {
+        headers: {
+          'accept': 'application/json',
+          'Accept-Language': 'en-US,en;q=0.8',
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (_ref2) {
+        var data = _ref2.data;
+
+        if (data.success) {
+          $('#modal-large').modal('hide');
+
+          _this.form.reset();
+
+          Swal.fire("Success!", "Resource added successfully", "success");
+
+          _this.getPdfs();
+        }
+      });
+    }
   },
   created: function created() {
-    this.getPdf();
+    this.getPdfs();
   }
 });
 
@@ -283,7 +321,7 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("\n                    Add PDF\n                ")]
+            [_vm._v("\n                        Add PDF\n                    ")]
           )
         ]),
         _vm._v(" "),
@@ -306,7 +344,7 @@ var render = function() {
                     [
                       _c("label", [
                         _vm._v(
-                          "\n                                    Show\n                                    "
+                          "\n                                        Show\n                                        "
                         ),
                         _c(
                           "select",
@@ -360,7 +398,7 @@ var render = function() {
                           ]
                         ),
                         _vm._v(
-                          "\n                                    entries\n                                "
+                          "\n                                        entries\n                                    "
                         )
                       ])
                     ]
@@ -543,7 +581,7 @@ var render = function() {
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
-                      return _vm.updatePDf.apply(null, arguments)
+                      return _vm.addpdf.apply(null, arguments)
                     }
                   }
                 },
@@ -570,7 +608,102 @@ var render = function() {
                         ]
                       ),
                       _vm._v(" "),
-                      _vm._m(2)
+                      _c("div", { staticClass: "block-content" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "email" } }, [
+                            _vm._v("Title")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.title,
+                                expression: "form.title"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "text",
+                              id: "email",
+                              name: "email",
+                              placeholder: "Enter title.."
+                            },
+                            domProps: { value: _vm.form.title },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.form, "title", $event.target.value)
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "description" } }, [
+                            _vm._v("Description")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.description,
+                                expression: "form.description"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "text",
+                              id: "description",
+                              name: "description",
+                              placeholder: "Enter description.."
+                            },
+                            domProps: { value: _vm.form.description },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.form,
+                                  "description",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group row" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "col-12",
+                              attrs: { for: "example-file-input" }
+                            },
+                            [_vm._v("File Upload")]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-12" }, [
+                            _c("input", {
+                              attrs: {
+                                required: "",
+                                type: "file",
+                                id: "example-file-input",
+                                name: "example-file-input"
+                              },
+                              on: { change: _vm.selectPdf }
+                            })
+                          ])
+                        ])
+                      ])
                     ]
                   ),
                   _vm._v(" "),
@@ -642,72 +775,6 @@ var staticRenderFns = [
           }
         },
         [_c("i", { staticClass: "si si-close" })]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "block-content" }, [
-      _c(
-        "form",
-        {
-          attrs: {
-            action: "be_forms_elements_bootstrap.html",
-            method: "post",
-            onsubmit: "return false;"
-          }
-        },
-        [
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "email" } }, [_vm._v("Title")]),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "email",
-                name: "email",
-                placeholder: "Enter title.."
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "description" } }, [
-              _vm._v("Description")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "description",
-                name: "description",
-                placeholder: "Enter description.."
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group row" }, [
-            _c(
-              "label",
-              { staticClass: "col-12", attrs: { for: "example-file-input" } },
-              [_vm._v("File Upload")]
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-12" }, [
-              _c("input", {
-                attrs: {
-                  type: "file",
-                  id: "example-file-input",
-                  name: "example-file-input"
-                }
-              })
-            ])
-          ])
-        ]
       )
     ])
   }
