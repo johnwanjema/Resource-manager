@@ -145,6 +145,18 @@ class PdfController extends Controller
      */
     public function destroy(Pdf $pdf)
     {
-        //
+        try{
+
+            //delete existing image
+            $imgWillDelete = public_path() . '/PDF/'.$pdf->storageLink;
+            File::delete($imgWillDelete);
+
+
+            $pdf->delete();
+
+            return api_response(true,null, 200, 'success','successfully deleted resource', $pdf);
+        }catch (\Exception $exception){
+            return api_response(false,$exception->getMessage(), 200, 'error','error deleting resource', null);
+        }
     }
 }

@@ -49,6 +49,9 @@
                                         <b-button class="btn btn-sm" variant="warning" @click="openEditModal(row.item)">
                                             Edit
                                         </b-button>
+                                        <b-button class="btn btn-sm" variant="danger" @click="deletePDF(row.item.id)">
+                                            Delete
+                                        </b-button>
                                     </template>
                                 </b-table>
                             </div>
@@ -213,6 +216,31 @@ export default {
                 }
             });
         },
+        deletePDF(id) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then(result => {
+                // send request
+                if (result.value) {
+                    this.form
+                        .delete("/api/pdfs/" + id)
+                        .then(() => {
+                            Swal.fire("Deleted!", "PDF has been deleted.", "success");
+                            this.getPdfs();
+                        })
+                        .catch(() => {
+                            Swal.fire("Failed to delete", "Failed",'error');
+                        });
+                }
+            });
+        },
+
     },
     created() {
         this.getPdfs();
