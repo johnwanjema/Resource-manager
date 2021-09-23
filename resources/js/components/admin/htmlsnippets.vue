@@ -216,6 +216,7 @@ export default {
                 .post("/api/snippets")
                 .then(({ data }) => {
                     if (data.success) {
+                        this.form.reset
                         toast.fire({
                             icon: "success",
                             title: "Snippet added successfully"

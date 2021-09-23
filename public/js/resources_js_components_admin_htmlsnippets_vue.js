@@ -242,6 +242,7 @@ __webpack_require__.r(__webpack_exports__);
         var data = _ref3.data;
 
         if (data.success) {
+          _this3.form.reset;
           toast.fire({
             icon: "success",
             title: "Snippet added successfully"

@@ -169,6 +169,7 @@ __webpack_require__.r(__webpack_exports__);
     openModal: function openModal() {
       this.editMode = false;
       $('#modal-large').modal('show');
+      this.form.reset();
     },
     openEditModal: function openEditModal() {
       this.editMode = true;
@@ -185,6 +186,8 @@ __webpack_require__.r(__webpack_exports__);
         var data = _ref.data;
 
         if (data.success) {
+          _this.form.reset();
+
           toast.fire({
             icon: "success",
             title: "Link added successfully"

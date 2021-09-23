@@ -154,6 +154,7 @@ export default {
         openModal() {
             this.editMode = false;
             $('#modal-large').modal('show');
+            this.form.reset();
         },
         openEditModal() {
             this.editMode = true;
@@ -168,6 +169,7 @@ export default {
                 .post("/api/links")
                 .then(({ data }) => {
                     if (data.success) {
+                        this.form.reset();
                         toast.fire({
                             icon: "success",
                             title: "Link added successfully"
