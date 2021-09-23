@@ -183,7 +183,7 @@ export default {
         getPdfs() {
             axios.get("/api/pdfs" )
                 .then(({data}) => {
-                    console.log(data);
+                    // console.log(data);
                     this.pdfs = data.data;
                     this.totalRows = this.pdfs.length;
                 })
@@ -244,7 +244,6 @@ export default {
     },
     created() {
         this.getPdfs();
-       
     }
 }
 </script>

@@ -208,7 +208,7 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get("/api/pdfs").then(function (_ref2) {
         var data = _ref2.data;
-        console.log(data);
+        // console.log(data);
         _this2.pdfs = data.data;
         _this2.totalRows = _this2.pdfs.length;
       })["catch"](function (e) {

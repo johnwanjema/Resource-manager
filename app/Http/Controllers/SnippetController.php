@@ -14,7 +14,8 @@ class SnippetController extends Controller
      */
     public function index()
     {
-        //
+        $snippets = Snippet::orderBY('created_at', 'DESC')->get();
+        return api_response(true, null, 200, 'success', 'successfully fetched all snippets', $snippets);
     }
 
     /**
@@ -35,7 +36,27 @@ class SnippetController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $this->validate($request, [
+                'title' => 'required',
+                'description' => 'required',
+                'snippet' => 'required',
+            ]);
+
+            $snippet = new Snippet();
+            $snippet->title = $request['title'];
+            $snippet->description = $request['description'];
+            $snippet->snippet = $request['snippet'];
+
+
+            if ($snippet->save()) {
+                return api_response(true, null, 200, 'success', 'successfully saved Snippet', $snippet);
+            } else {
+                return api_response(false, null, 200, 'success', 'successfully saved Snippet', $snippet);
+            }
+        } catch (\Exception $exception) {
+            return api_response(false, $exception->getMessage(), 200, 'error', 'error saving Snippet', null);
+        }
     }
 
     /**
@@ -69,7 +90,25 @@ class SnippetController extends Controller
      */
     public function update(Request $request, Snippet $snippet)
     {
-        //
+        try {
+
+            if (isset($request['title'])&& $request['title'] != "null")
+                $snippet->title = $request['title'];
+
+            if (isset($request['description']) && $request['description'] != "null")
+                $snippet->description = $request['description'];
+
+
+            if (isset($request['snippet'])&& $request['snippet'] != "null")
+                $snippet->snippet = $request['snippet'];
+
+
+            $snippet->save();
+
+            return api_response(true, null, 200, 'success', 'successfully updated snippet', $snippet);
+        } catch (\Exception $exception) {
+            return api_response(false, $exception->getMessage(), 200, 'error', 'error updating snippet', null);
+        }
     }
 
     /**
@@ -80,6 +119,12 @@ class SnippetController extends Controller
      */
     public function destroy(Snippet $snippet)
     {
-        //
+        try{
+            $snippet->delete();
+
+            return api_response(true,null, 200, 'success','successfully deleted snippet', $snippet);
+        }catch (\Exception $exception){
+            return api_response(false,$exception->getMessage(), 200, 'error','error deleting snippet', null);
+        }
     }
 }

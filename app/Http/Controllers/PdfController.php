@@ -110,7 +110,7 @@ class PdfController extends Controller
                 $pdf->description = $request['description'];
 
 
-            if (isset($request['status'])&& $request['description'] != "null")
+            if (isset($request['status'])&& $request['status'] != "null")
                 $pdf->status = $request['status'];
 
 

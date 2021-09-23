@@ -130,25 +130,56 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       currentPage: 1,
       perPage: 5,
       fields: ['#', {
-        key: 'titile'
+        key: 'title'
       }, {
         key: 'description'
       }, 'created_at', {
         key: 'actions',
         label: 'Actions'
       }],
-      snippets: [{}],
+      snippets: [],
       filter: null,
       filterOn: [],
-      form: new Form({}),
+      form: new Form({
+        id: '',
+        title: '',
+        description: '',
+        snippet: ''
+      }),
       editMode: false,
-      data: ''
+      snippet: ''
     };
   },
   computed: {
@@ -158,26 +189,96 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     openVIewModal: function openVIewModal(snippet) {
-      $('#modal').modal('show');
-      this.form.fill(snippet);
+      $('#view-modal').modal('show');
+      this.snippet = snippet;
     },
-    updateSnippet: function updateSnippet() {},
+    updateSnippet: function updateSnippet() {
+      var _this = this;
+
+      this.form.put('/api/snippets/' + this.snippet.id).then(function (_ref) {
+        var data = _ref.data;
+        // console.log(data);
+        toast.fire({
+          icon: "success",
+          title: "Snippet updated successfully"
+        });
+        $('#modal-large').modal('hide');
+
+        _this.form.reset();
+
+        _this.getSnippets();
+      });
+    },
     openModal: function openModal() {
       this.editMode = false;
       $('#modal-large').modal('show');
     },
-    openEditModal: function openEditModal() {
+    openEditModal: function openEditModal(snippet) {
+      this.form.fill(snippet);
       this.editMode = true;
+      this.snippet = snippet;
       $('#modal-large').modal('show');
     },
     onFiltered: function onFiltered(filteredItems) {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getSnippet: function getSnippet() {}
+    getSnippets: function getSnippets() {
+      var _this2 = this;
+
+      axios.get("/api/snippets").then(function (_ref2) {
+        var data = _ref2.data;
+        // console.log(data);
+        _this2.snippets = data.data;
+        _this2.totalRows = _this2.snippets.length;
+      })["catch"](function (e) {
+        console.log(error);
+      });
+    },
+    addSnippet: function addSnippet() {
+      var _this3 = this;
+
+      this.form.post("/api/snippets").then(function (_ref3) {
+        var data = _ref3.data;
+
+        if (data.success) {
+          toast.fire({
+            icon: "success",
+            title: "Snippet added successfully"
+          });
+          $("#modal-large").modal("hide");
+
+          _this3.getSnippets();
+        }
+      })["catch"](function () {});
+    },
+    deleteSnippet: function deleteSnippet(id) {
+      var _this4 = this;
+
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        // send request
+        if (result.value) {
+          _this4.form["delete"]("/api/snippets/" + id).then(function () {
+            Swal.fire("Deleted!", "Snippet has been deleted.", "success");
+
+            _this4.getSnippets();
+          })["catch"](function () {
+            Swal.fire("Failed to delete", "Failed", 'error');
+          });
+        }
+      });
+    }
   },
   created: function created() {
-    this.getSnippet();
+    this.getSnippets();
   }
 });
 
@@ -285,7 +386,11 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("\n                    Add Snippet\n                ")]
+            [
+              _vm._v(
+                "\n                        Add Snippet\n                    "
+              )
+            ]
           )
         ]),
         _vm._v(" "),
@@ -308,7 +413,7 @@ var render = function() {
                     [
                       _c("label", [
                         _vm._v(
-                          "\n                                        Show\n                                        "
+                          "\n                                            Show\n                                            "
                         ),
                         _c(
                           "select",
@@ -362,7 +467,7 @@ var render = function() {
                           ]
                         ),
                         _vm._v(
-                          "\n                                        entries\n                                    "
+                          "\n                                            entries\n                                        "
                         )
                       ])
                     ]
@@ -437,6 +542,23 @@ var render = function() {
                           }
                         },
                         {
+                          key: "cell(created_at)",
+                          fn: function(row) {
+                            return [
+                              _c("p", [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(
+                                      _vm._f("filterDateOnly")(
+                                        row.item.created_at
+                                      )
+                                    )
+                                )
+                              ])
+                            ]
+                          }
+                        },
+                        {
                           key: "cell(actions)",
                           fn: function(row) {
                             return [
@@ -472,6 +594,24 @@ var render = function() {
                                 [
                                   _vm._v(
                                     "\n                                        Edit\n                                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-button",
+                                {
+                                  staticClass: "btn btn-sm",
+                                  attrs: { variant: "danger" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteSnippet(row.item.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                        Delete\n                                    "
                                   )
                                 ]
                               )
@@ -545,7 +685,7 @@ var render = function() {
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
-                      return _vm.updateSnippet.apply(null, arguments)
+                      _vm.editMode ? _vm.updateSnippet() : _vm.addSnippet()
                     }
                   }
                 },
@@ -583,28 +723,104 @@ var render = function() {
                             }
                           },
                           [
-                            _vm._m(2),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", { attrs: { for: "email" } }, [
+                                _vm._v("Title")
+                              ]),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.title,
+                                    expression: "form.title"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  id: "email",
+                                  name: "email",
+                                  placeholder: "Enter title.."
+                                },
+                                domProps: { value: _vm.form.title },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "title",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
                             _vm._v(" "),
-                            _vm._m(3),
-                            _vm._v(" "),
-                            _vm._m(4),
+                            _c("div", { staticClass: "form-group row" }, [
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "col-12",
+                                  attrs: { for: "example-textarea-input" }
+                                },
+                                [_vm._v("Description")]
+                              ),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-12" }, [
+                                _c("textarea", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.description,
+                                      expression: "form.description"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    id: "example-textarea-input",
+                                    name: "example-textarea-input",
+                                    rows: "6",
+                                    placeholder: "Description ..",
+                                    spellcheck: "false"
+                                  },
+                                  domProps: { value: _vm.form.description },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.form,
+                                        "description",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ]),
                             _vm._v(" "),
                             _c(
                               "div",
                               { staticClass: "form-group" },
                               [
                                 _c("label", { attrs: { for: "description" } }, [
-                                  _vm._v("Description")
+                                  _vm._v("HTML Snippet")
                                 ]),
                                 _vm._v(" "),
                                 _c("tinymce", {
                                   attrs: { id: "d1" },
                                   model: {
-                                    value: _vm.data,
+                                    value: _vm.form.snippet,
                                     callback: function($$v) {
-                                      _vm.data = $$v
+                                      _vm.$set(_vm.form, "snippet", $$v)
                                     },
-                                    expression: "data"
+                                    expression: "form.snippet"
                                   }
                                 })
                               ],
@@ -658,6 +874,43 @@ var render = function() {
           ]
         )
       ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal",
+        attrs: {
+          id: "view-modal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "modal-large",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog modal-lg", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c(
+                "div",
+                { staticClass: "block block-themed block-transparent mb-0" },
+                [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "block-content" }, [
+                    _c("p", [_vm._v(_vm._s(_vm.snippet.snippet))])
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(3)
+            ])
+          ]
+        )
+      ]
     )
   ])
 }
@@ -691,42 +944,22 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "email" } }, [_vm._v("Title")]),
+    return _c("div", { staticClass: "block-header bg-primary-dark" }, [
+      _c("h3", { staticClass: "block-title" }, [_vm._v("View Snippet")]),
       _vm._v(" "),
-      _c("input", {
-        staticClass: "form-control",
-        attrs: {
-          type: "text",
-          id: "email",
-          name: "email",
-          placeholder: "Enter title.."
-        }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group row" }, [
-      _c(
-        "label",
-        { staticClass: "col-12", attrs: { for: "example-textarea-input" } },
-        [_vm._v("Textarea")]
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-12" }, [
-        _c("textarea", {
-          staticClass: "form-control",
-          attrs: {
-            id: "example-textarea-input",
-            name: "example-textarea-input",
-            rows: "6",
-            placeholder: "Content..",
-            spellcheck: "false"
-          }
-        })
+      _c("div", { staticClass: "block-options" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn-block-option",
+            attrs: {
+              type: "button",
+              "data-dismiss": "modal",
+              "aria-label": "Close"
+            }
+          },
+          [_c("i", { staticClass: "si si-close" })]
+        )
       ])
     ])
   },
@@ -734,18 +967,15 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "description" } }, [_vm._v("Description")]),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "form-control",
-        attrs: {
-          type: "text",
-          id: "description",
-          name: "description",
-          placeholder: "Enter description.."
-        }
-      })
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-alt-danger",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      )
     ])
   }
 ]
