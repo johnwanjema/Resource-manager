@@ -91,9 +91,9 @@
                                     <input required v-model="form.description" type="text" class="form-control" id="description" name="description" placeholder="Enter description.." />
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-12" for="example-file-input">File Upload</label>
+                                    <label class="col-12" for="file-input">File Upload</label>
                                     <div class="col-12">
-                                        <input required  @change="selectPdf" type="file" id="example-file-input" name="example-file-input">
+                                        <input required  @change="selectPdf" type="file" id="file-input" name="file-input">
                                     </div>
                                 </div>
                             </div>
@@ -185,6 +185,7 @@ export default {
                 if (data.success) {
                     $('#modal-large').modal('hide');
                     this.form.reset();
+                    document.getElementById("file-input").value = "";
                     Swal.fire("Success!", "Resource added successfully", "success");
                     this.getPdfs();
                 }

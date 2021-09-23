@@ -208,6 +208,7 @@ __webpack_require__.r(__webpack_exports__);
 
           _this2.form.reset();
 
+          document.getElementById("file-input").value = "";
           Swal.fire("Success!", "Resource added successfully", "success");
 
           _this2.getPdfs();
@@ -703,7 +704,7 @@ var render = function() {
                             "label",
                             {
                               staticClass: "col-12",
-                              attrs: { for: "example-file-input" }
+                              attrs: { for: "file-input" }
                             },
                             [_vm._v("File Upload")]
                           ),
@@ -713,8 +714,8 @@ var render = function() {
                               attrs: {
                                 required: "",
                                 type: "file",
-                                id: "example-file-input",
-                                name: "example-file-input"
+                                id: "file-input",
+                                name: "file-input"
                               },
                               on: { change: _vm.selectPdf }
                             })
