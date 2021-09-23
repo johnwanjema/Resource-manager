@@ -6,8 +6,8 @@
                 <div class="block-header block-header-default">
                     <h3 class="block-title"><small></small></h3>
                     <button class="btn btn-success" @click="openModal()">
-                            Add Links
-                        </button>
+                            Add Link
+                    </button>
                 </div>
                 <div class="block-content block-content-full">
                     <div id="DataTables_Table_1_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
@@ -39,13 +39,17 @@
                                             <p>{{row.index + 1}}</p>
                                     </template>
 
-                                     <template v-slot:cell(created_at)="row">
+                                    <template v-slot:cell(created_at)="row">
                                         <p>{{row.item.created_at |filterDateOnly}}</p>
                                     </template>
+                                    <template v-slot:cell(open_in_new_tab)="row">
+                                        <p v-if="row.item.open_in_new_tab == 1">True</p>
+                                        <p v-else>False</p>
+                                    </template>
                                     <template v-slot:cell(actions)="row">
-                                        <b-button class="btn btn-sm" variant="primary" @click="openVIewModal(row.item)">
-                                            View
-                                        </b-button>
+                                        <a class="btn btn-primary btn-sm" :href='row.item.link'  :target='row.item.open_in_new_tab == 1 ? "_blank" : "_self"'>
+                                            Open
+                                        </a>
                                         <b-button class="btn btn-sm" variant="warning" @click="openEditModal(row.item)">
                                             Edit
                                         </b-button>
@@ -88,13 +92,13 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="description">Link</label>
-                                        <input required v-model="form.link" type="text" class="form-control" id="link" name="link" placeholder="Enter link.." />
+                                        <input required v-model="form.link" type="url" class="form-control" id="link" name="link" placeholder="Enter link.." />
                                     </div>
                                    <div class="form-group row">
                                         <label class="col-12"></label>
                                         <div class="col-12">
                                             <div class="custom-control custom-checkbox custom-control-inline mb-5">
-                                            <input required v-model="form.open_in_new_tab" class="custom-control-input" type="checkbox" name="example-inline-checkbox1" id="example-inline-checkbox1" value="option1" checked="">
+                                            <input  v-model="form.open_in_new_tab" class="custom-control-input" type="checkbox" name="example-inline-checkbox1" id="example-inline-checkbox1" value="option1" checked="">
                                             <label class="custom-control-label" for="example-inline-checkbox1">Open in a new tab</label>
                                             </div>
                                             
@@ -125,7 +129,7 @@ export default {
         return {
             currentPage: 1,
             perPage: 5,
-            fields: ['#', { key: 'title', }, 'created_at', { key: 'actions', label: 'Actions' }],
+            fields: ['#', { key: 'title', }, 'link','open_in_new_tab','created_at', { key: 'actions', label: 'Actions' }],
             links: [],
             filter: null,
             filterOn: [],
@@ -133,7 +137,7 @@ export default {
                 id: '',
                 title: '',
                 link: '',
-                open_in_new_tab: ''
+                open_in_new_tab: false
             }),
             editMode: false
         }

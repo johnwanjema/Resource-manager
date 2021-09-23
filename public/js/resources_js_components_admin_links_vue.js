@@ -132,6 +132,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -139,7 +143,7 @@ __webpack_require__.r(__webpack_exports__);
       perPage: 5,
       fields: ['#', {
         key: 'title'
-      }, 'created_at', {
+      }, 'link', 'open_in_new_tab', 'created_at', {
         key: 'actions',
         label: 'Actions'
       }],
@@ -150,7 +154,7 @@ __webpack_require__.r(__webpack_exports__);
         id: '',
         title: '',
         link: '',
-        open_in_new_tab: ''
+        open_in_new_tab: false
       }),
       editMode: false
     };
@@ -322,11 +326,7 @@ var render = function() {
                 }
               }
             },
-            [
-              _vm._v(
-                "\n                        Add Links\n                    "
-              )
-            ]
+            [_vm._v("\n                        Add Link\n                ")]
           )
         ]),
         _vm._v(" "),
@@ -494,23 +494,34 @@ var render = function() {
                           }
                         },
                         {
+                          key: "cell(open_in_new_tab)",
+                          fn: function(row) {
+                            return [
+                              row.item.open_in_new_tab == 1
+                                ? _c("p", [_vm._v("True")])
+                                : _c("p", [_vm._v("False")])
+                            ]
+                          }
+                        },
+                        {
                           key: "cell(actions)",
                           fn: function(row) {
                             return [
                               _c(
-                                "b-button",
+                                "a",
                                 {
-                                  staticClass: "btn btn-sm",
-                                  attrs: { variant: "primary" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.openVIewModal(row.item)
-                                    }
+                                  staticClass: "btn btn-primary btn-sm",
+                                  attrs: {
+                                    href: row.item.link,
+                                    target:
+                                      row.item.open_in_new_tab == 1
+                                        ? "_blank"
+                                        : "_self"
                                   }
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                        View\n                                    "
+                                    "\n                                        Open\n                                    "
                                   )
                                 ]
                               ),
@@ -681,7 +692,7 @@ var render = function() {
                             staticClass: "form-control",
                             attrs: {
                               required: "",
-                              type: "text",
+                              type: "url",
                               id: "link",
                               name: "link",
                               placeholder: "Enter link.."
@@ -720,7 +731,6 @@ var render = function() {
                                   ],
                                   staticClass: "custom-control-input",
                                   attrs: {
-                                    required: "",
                                     type: "checkbox",
                                     name: "example-inline-checkbox1",
                                     id: "example-inline-checkbox1",
