@@ -24,5 +24,7 @@ Route::apiResources([
     'links' => 'LinkController',
 ]);
 
-Route::get('dashboardstats','HomeController@getDashboardStats');
 // dashboardstats
+Route::get('dashboardstats','HomeController@getDashboardStats');
+
+Route::get('gethomedata','VisitorsController@getHomeData');
