@@ -43,7 +43,7 @@
                                     </template>
 
                                     <template v-slot:cell(actions)="row">
-                                        <a class="btn btn-success btn-sm"  :href="'/PDF/'+ row.item.storageLink" target="_blank">
+                                        <a class="btn btn-primary btn-sm"  :href="'/PDF/'+ row.item.storageLink" target="_blank">
                                             View
                                         </a>
                                         <b-button class="btn btn-sm" variant="warning" @click="openEditModal(row.item)">

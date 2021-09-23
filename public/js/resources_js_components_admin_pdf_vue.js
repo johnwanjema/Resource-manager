@@ -554,7 +554,7 @@ var render = function() {
                               _c(
                                 "a",
                                 {
-                                  staticClass: "btn btn-success btn-sm",
+                                  staticClass: "btn btn-primary btn-sm",
                                   attrs: {
                                     href: "/PDF/" + row.item.storageLink,
                                     target: "_blank"
