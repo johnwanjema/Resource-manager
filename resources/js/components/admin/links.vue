@@ -74,7 +74,7 @@
         <div class="modal" id="modal-large" tabindex="-1" role="dialog" aria-labelledby="modal-large" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <form @submit.prevent="addLink">
+                    <form @submit.prevent="editMode? updateLink() : addLink()">
                         <div class="block block-themed block-transparent mb-0">
                             <div class="block-header bg-primary-dark">
                                 <h3 v-if="editMode" class="block-title">Edit Link</h3>
@@ -153,16 +153,29 @@ export default {
             this.form.fill(link)
         },
         updateLink() {
-
+            this.form.put('/api/links/' + this.form.id)
+                .then(({ data }) => {
+                    // console.log(data);
+                    if(data.success){
+                        toast.fire({
+                        icon: "success",
+                        title: "Snippet updated successfully"
+                        });
+                        $('#modal-large').modal('hide');
+                        this.form.reset();
+                        this.getLinks();
+                    }
+                });
         },
         openModal() {
             this.editMode = false;
             $('#modal-large').modal('show');
             this.form.reset();
         },
-        openEditModal() {
+        openEditModal(link) {
             this.editMode = true;
             $('#modal-large').modal('show');
+            this.form.fill(link);
         },
         onFiltered(filteredItems) {
             this.totalRows = filteredItems.length;

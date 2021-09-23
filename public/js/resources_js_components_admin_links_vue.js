@@ -169,28 +169,48 @@ __webpack_require__.r(__webpack_exports__);
       $('#modal').modal('show');
       this.form.fill(link);
     },
-    updateLink: function updateLink() {},
+    updateLink: function updateLink() {
+      var _this = this;
+
+      this.form.put('/api/links/' + this.form.id).then(function (_ref) {
+        var data = _ref.data;
+
+        // console.log(data);
+        if (data.success) {
+          toast.fire({
+            icon: "success",
+            title: "Snippet updated successfully"
+          });
+          $('#modal-large').modal('hide');
+
+          _this.form.reset();
+
+          _this.getLinks();
+        }
+      });
+    },
     openModal: function openModal() {
       this.editMode = false;
       $('#modal-large').modal('show');
       this.form.reset();
     },
-    openEditModal: function openEditModal() {
+    openEditModal: function openEditModal(link) {
       this.editMode = true;
       $('#modal-large').modal('show');
+      this.form.fill(link);
     },
     onFiltered: function onFiltered(filteredItems) {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
     addLink: function addLink() {
-      var _this = this;
+      var _this2 = this;
 
-      this.form.post("/api/links").then(function (_ref) {
-        var data = _ref.data;
+      this.form.post("/api/links").then(function (_ref2) {
+        var data = _ref2.data;
 
         if (data.success) {
-          _this.form.reset();
+          _this2.form.reset();
 
           toast.fire({
             icon: "success",
@@ -198,20 +218,20 @@ __webpack_require__.r(__webpack_exports__);
           });
           $("#modal-large").modal("hide");
 
-          _this.getLinks();
+          _this2.getLinks();
         }
       })["catch"](function (error) {
         console.log(error);
       });
     },
     getLinks: function getLinks() {
-      var _this2 = this;
+      var _this3 = this;
 
-      axios.get("/api/links").then(function (_ref2) {
-        var data = _ref2.data;
+      axios.get("/api/links").then(function (_ref3) {
+        var data = _ref3.data;
         // console.log(data);
-        _this2.links = data.data;
-        _this2.totalRows = _this2.links.length;
+        _this3.links = data.data;
+        _this3.totalRows = _this3.links.length;
       })["catch"](function (e) {
         console.log(error);
       });
@@ -613,7 +633,7 @@ var render = function() {
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
-                      return _vm.addLink.apply(null, arguments)
+                      _vm.editMode ? _vm.updateLink() : _vm.addLink()
                     }
                   }
                 },

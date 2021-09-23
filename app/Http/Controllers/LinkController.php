@@ -90,7 +90,25 @@ class LinkController extends Controller
      */
     public function update(Request $request, Link $link)
     {
-        //
+        try {
+
+            if (isset($request['title'])&& $request['title'] != "null")
+                $link->title = $request['title'];
+
+            if (isset($request['link']) && $request['link'] != "null")
+                $link->link = $request['link'];
+
+
+            if (isset($request['open_in_new_tab'])&& $request['open_in_new_tab'] != "null")
+                $link->open_in_new_tab = $request['open_in_new_tab'];
+
+
+            $link->save();
+
+            return api_response(true, null, 200, 'success', 'successfully updated link', $link);
+        } catch (\Exception $exception) {
+            return api_response(false, $exception->getMessage(), 200, 'error', 'error updating link', null);
+        }
     }
 
     /**
