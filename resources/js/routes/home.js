@@ -1,4 +1,4 @@
-const home = () =>import ( '../components/home')
+const home = () =>import ( '../components/home/home.vue')
 
 export default [
     {
@@ -9,6 +9,6 @@ export default [
     },
     {
         path: '/home',
-        redirect:'/home/pdf'
+        redirect:'/home/pdfs'
     },
 ]
