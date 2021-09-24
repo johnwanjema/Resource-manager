@@ -130,6 +130,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -165,24 +167,32 @@ __webpack_require__.r(__webpack_exports__);
     updatePDf: function updatePDf() {
       var _this = this;
 
-      axios.put("/api/pdfs/" + this.pdf.id, this.form).then(function (_ref) {
+      var data = new FormData();
+      data.append('title', this.form.title);
+      data.append('description', this.form.description);
+      data.append('pdf', this.form.pdf);
+      axios.post("/api/updatepdf/" + this.pdf.id, data, {
+        headers: {
+          'accept': 'application/json',
+          'Accept-Language': 'en-US,en;q=0.8',
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (_ref) {
         var data = _ref.data;
 
         if (data.success) {
-          toast.fire({
-            icon: "success",
-            title: "PDF updated successfully"
-          });
           $('#modal-large').modal('hide');
 
           _this.form.reset();
 
           document.getElementById("file-input").value = "";
+          toast.fire({
+            icon: "success",
+            title: "PDF updated successfully"
+          });
 
           _this.getPdfs();
         }
-      })["catch"](function (e) {
-        console.log(error);
       });
     },
     selectPdf: function selectPdf(event) {
@@ -734,42 +744,49 @@ var render = function() {
                           })
                         ]),
                         _vm._v(" "),
-                        _c("div", { staticClass: "form-group" }, [
-                          _c("label", { attrs: { for: "description" } }, [
-                            _vm._v("Description")
-                          ]),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.description,
-                                expression: "form.description"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              required: "",
-                              type: "text",
-                              id: "description",
-                              name: "description",
-                              placeholder: "Enter description.."
+                        _c("div", { staticClass: "form-group row" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "col-12",
+                              attrs: { for: "textarea-input" }
                             },
-                            domProps: { value: _vm.form.description },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                            [_vm._v("Description")]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-12" }, [
+                            _c("textarea", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.description,
+                                  expression: "form.description"
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "description",
-                                  $event.target.value
-                                )
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                id: "textarea-input",
+                                name: "textarea-input",
+                                rows: "4",
+                                placeholder: "Description ..",
+                                spellcheck: "false"
+                              },
+                              domProps: { value: _vm.form.description },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "description",
+                                    $event.target.value
+                                  )
+                                }
                               }
-                            }
-                          })
+                            })
+                          ])
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "form-group row" }, [

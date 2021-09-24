@@ -36,7 +36,7 @@
                             <i class="fa fa-link fa-2x text-elegance-light"></i>
                         </div>
                         <div class="font-size-h3 font-w600 text-elegance js-count-to-enabled" data-toggle="countTo" data-speed="1000" data-to="15">
-                            15
+                           {{links}}
                         </div>
                         <div class="font-size-sm font-w600 text-uppercase text-muted">
                             Links
@@ -59,7 +59,7 @@ export default {
     },
     methods:{
         getDashboardData() {
-            axios.get("/api/dashboardstats" )
+            axios.get("/api/dashboardStats" )
                 .then(({data}) => {
                     // console.log(data);
                     this.pdfs = data.data.pdfs;

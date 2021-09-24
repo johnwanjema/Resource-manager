@@ -18,7 +18,7 @@ class CreateLinksTable extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('link');
-            $table->boolean('open_in_new_tab')->default();
+            $table->boolean('open_in_new_tab')->default(1);
             $table->timestamps();
         });
     }

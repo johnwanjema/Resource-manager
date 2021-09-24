@@ -17,12 +17,29 @@ Route::get('/', function () {
     return redirect('/home');
 });
 
-// welcome
-Auth::routes();
-
 Route::get('/home/{any?}/{component?}', function () {
     return view('home');
 });
+
+Route::get('/admin/{any?}', [
+    'as' => 'admin',
+    function () {
+        return view('admin');
+    }
+])->middleware('auth')->where('any', '.*');
+
+
+Auth::routes(['verify'=>true]);
+
+Route::get('login', [
+    'as' => 'login',
+    'uses' => 'App\Http\Controllers\Auth\CustomAuthController@getLogin'
+]);
+
+Route::post('postLogin', [
+    'as' => 'postLogin',
+    'uses' => 'App\Http\Controllers\Auth\CustomAuthController@postLogin'
+]);
 
 Route::get('logout', [
     'as' => 'logout',
@@ -32,7 +49,6 @@ Route::get('logout', [
     }
 ]);
 
-Route::get('/admin/{any?}/{component?}', function () {
-    return view('admin');
-});
+Route::get('/gethomedata','App\Http\Controllers\VisitorsController@getHomeData');
+
 

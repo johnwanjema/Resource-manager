@@ -89,9 +89,11 @@
                                     <label for="email">Title</label>
                                     <input required v-model="form.title" type="text" class="form-control" id="email" name="email" placeholder="Enter title.." />
                                 </div>
-                                <div class="form-group">
-                                    <label for="description">Description</label>
-                                    <input required v-model="form.description" type="text" class="form-control" id="description" name="description" placeholder="Enter description.." />
+                                <div class="form-group row">
+                                    <label class="col-12" for="textarea-input">Description</label>
+                                    <div class="col-12">
+                                        <textarea v-model="form.description" class="form-control" id="textarea-input" name="textarea-input" rows="4" placeholder="Description .." spellcheck="false"></textarea>
+                                    </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-12" for="file-input">File Upload</label>
@@ -144,22 +146,29 @@ export default {
     },
     methods: {
         updatePDf() {
-             axios.put("/api/pdfs/"+ this.pdf.id , this.form )
-                .then(({data}) => {
-                    if(data.success){
-                        toast.fire({
-                            icon: "success",
-                            title: "PDF updated successfully"
-                        });
-                        $('#modal-large').modal('hide');
-                        this.form.reset();
-                        document.getElementById("file-input").value = "";
-                        this.getPdfs();
-                    }
-                })
-                .catch((e) => {
-                    console.log(error)
-                });
+            let data = new FormData();
+            data.append('title', this.form.title);
+            data.append('description', this.form.description);
+            data.append('pdf', this.form.pdf);
+
+            axios.post("/api/updatepdf/" + this.pdf.id , data, {
+                headers: {
+                    'accept': 'application/json',
+                    'Accept-Language': 'en-US,en;q=0.8',
+                    'Content-Type': 'multipart/form-data',
+                }
+            }).then(({ data }) => {
+                if (data.success) {
+                    $('#modal-large').modal('hide');
+                    this.form.reset();
+                    document.getElementById("file-input").value = "";
+                    toast.fire({
+                        icon: "success",
+                        title: "PDF updated successfully"
+                    });
+                    this.getPdfs();
+                }
+            });
         },
         selectPdf(event) {
             this.form.pdf = event.target.files[0];
