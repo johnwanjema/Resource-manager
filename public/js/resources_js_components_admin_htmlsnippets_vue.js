@@ -215,6 +215,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     openModal: function openModal() {
       this.editMode = false;
+      this.form.reset();
       $('#modal-large').modal('show');
     },
     openEditModal: function openEditModal(snippet) {

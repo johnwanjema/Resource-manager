@@ -192,6 +192,7 @@ export default {
         },
         openModal() {
             this.editMode = false;
+            this.form.reset();
             $('#modal-large').modal('show');
         },
         openEditModal(snippet) {
