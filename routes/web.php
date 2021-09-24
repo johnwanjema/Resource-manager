@@ -49,4 +49,6 @@ Route::get('logout', [
     }
 ]);
 
+Route::get('/gethomedata','App\Http\Controllers\VisitorsController@getHomeData');
+
 
