@@ -106,7 +106,7 @@
                                                 </a>
                                                 <ul class="list-inline mt-10">
                                                     <li class="list-inline-item">
-                                                        <a class="link-effect text-dual-primary-dark font-size-sm font-w600 text-uppercase" href="javascript:void(0)">{{Auth::user()->name}}</a>
+                                                        <a class="link-effect text-dual-primary-dark font-size-sm font-w600 text-uppercase" href="javascript:void(0)">{{Auth::user()->firstName}} {{Auth::user()->lastName}}</a>
                                                     </li>
                                                     <li class="list-inline-item">
                                                         <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
@@ -180,7 +180,7 @@
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-rounded btn-dual-secondary" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-user d-sm-none"></i>
-                                <span class="d-none d-sm-inline-block">{{Auth::user()->name}}</span>
+                                <span class="d-none d-sm-inline-block">{{Auth::user()->firstName}} {{Auth::user()->lastName}}</span>
                                 <i class="fa fa-angle-down ml-5"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right min-width-200" aria-labelledby="page-header-user-dropdown">
