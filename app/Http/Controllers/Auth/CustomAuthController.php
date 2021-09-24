@@ -19,6 +19,10 @@ class CustomAuthController extends Controller
 
     public function postLogin(Request $request)
     {
+        $this->validate($request, [
+            'email' => 'required',
+            'password' => 'required',
+        ]);
 
         $user = User::where('email', $request['email'])->first();
 
