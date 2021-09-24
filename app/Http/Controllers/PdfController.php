@@ -101,40 +101,7 @@ class PdfController extends Controller
      */
     public function update(Request $request, Pdf $pdf)
     {
-        try {
-
-            if (isset($request['title'])&& $request['title'] != "null")
-                $pdf->title = $request['title'];
-
-            if (isset($request['description']) && $request['description'] != "null")
-                $pdf->description = $request['description'];
-
-
-            if (isset($request['status'])&& $request['status'] != "null")
-                $pdf->status = $request['status'];
-
-
-            if ($request->hasFile('image')) {
-                //delete existing image
-                $imgWillDelete = public_path() . '/PDF/' . $pdf->imageUrl;
-                File::delete($imgWillDelete);
-
-                $file      = $request->file('pdf');
-                $filename  = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $picture   = date('His') . '-' . $filename;
-                $file->move(public_path('PDF'), $picture);
-                $pdf->imageUrl  = $picture;
-                // return $picture;
-            }
-
-
-            $pdf->save();
-
-            return api_response(true, null, 200, 'success', 'successfully updated PDF', $pdf);
-        } catch (\Exception $exception) {
-            return api_response(false, $exception->getMessage(), 200, 'error', 'error updating PDF', null);
-        }
+       //
     }
 
     /**
@@ -157,6 +124,43 @@ class PdfController extends Controller
             return api_response(true,null, 200, 'success','successfully deleted resource', $pdf);
         }catch (\Exception $exception){
             return api_response(false,$exception->getMessage(), 200, 'error','error deleting resource', null);
+        }
+    }
+
+    public function updatepdf($id, Request $request) {
+        try {
+            $pdf = Pdf::where('id', '=', $id)->first();
+
+            if (isset($request['title'])&& $request['title'] != "null")
+                $pdf->title = $request['title'];
+
+            if (isset($request['description']) && $request['description'] != "null")
+                $pdf->description = $request['description'];
+
+
+            if (isset($request['status'])&& $request['status'] != "null")
+                $pdf->status = $request['status'];
+
+
+            if ($request->hasFile('pdf')) {
+                //delete existing file
+                $imgWillDelete = public_path() . '/PDF/' . $pdf->storageLink;
+                File::delete($imgWillDelete);
+
+                $file      = $request->file('pdf');
+                $filename  = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $picture   = date('His') . '-' . $filename;
+                $file->move(public_path('PDF'), $picture);
+                $pdf->storageLink  = $picture;
+            }
+
+
+            $pdf->save();
+
+            return api_response(true, null, 200, 'success', 'successfully updated PDF', $pdf);
+        } catch (\Exception $exception) {
+            return api_response(false, $exception->getMessage(), 200, 'error', 'error updating PDF', null);
         }
     }
 }

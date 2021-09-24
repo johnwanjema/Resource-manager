@@ -59,7 +59,7 @@ export default {
     },
     methods:{
         getDashboardData() {
-            axios.get("/api/dashboardstats" )
+            axios.get("/api/dashboardStats" )
                 .then(({data}) => {
                     // console.log(data);
                     this.pdfs = data.data.pdfs;

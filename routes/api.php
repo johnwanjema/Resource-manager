@@ -25,6 +25,7 @@ Route::apiResources([
 ]);
 
 // dashboardstats
-Route::get('dashboardstats','HomeController@getDashboardStats');
+Route::get('dashboardStats','HomeController@getDashboardStats');
 
 Route::get('gethomedata','VisitorsController@getHomeData');
+Route::post('updatepdf/{id}','PdfController@updatepdf');

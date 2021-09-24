@@ -167,24 +167,32 @@ __webpack_require__.r(__webpack_exports__);
     updatePDf: function updatePDf() {
       var _this = this;
 
-      axios.put("/api/pdfs/" + this.pdf.id, this.form).then(function (_ref) {
+      var data = new FormData();
+      data.append('title', this.form.title);
+      data.append('description', this.form.description);
+      data.append('pdf', this.form.pdf);
+      axios.post("/api/updatepdf/" + this.pdf.id, data, {
+        headers: {
+          'accept': 'application/json',
+          'Accept-Language': 'en-US,en;q=0.8',
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (_ref) {
         var data = _ref.data;
 
         if (data.success) {
-          toast.fire({
-            icon: "success",
-            title: "PDF updated successfully"
-          });
           $('#modal-large').modal('hide');
 
           _this.form.reset();
 
           document.getElementById("file-input").value = "";
+          toast.fire({
+            icon: "success",
+            title: "PDF updated successfully"
+          });
 
           _this.getPdfs();
         }
-      })["catch"](function (e) {
-        console.log(error);
       });
     },
     selectPdf: function selectPdf(event) {

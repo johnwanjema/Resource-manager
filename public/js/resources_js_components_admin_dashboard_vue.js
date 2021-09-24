@@ -73,7 +73,7 @@ __webpack_require__.r(__webpack_exports__);
     getDashboardData: function getDashboardData() {
       var _this = this;
 
-      axios.get("/api/dashboardstats").then(function (_ref) {
+      axios.get("/api/dashboardStats").then(function (_ref) {
         var data = _ref.data;
         // console.log(data);
         _this.pdfs = data.data.pdfs;

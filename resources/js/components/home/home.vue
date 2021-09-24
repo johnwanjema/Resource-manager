@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         getData() {
-            axios.get("/api/gethomedata")
+            axios.get("/api/getHomeData")
                 .then(({ data }) => {
                     if (this.category == 'pdfs') {
                         this.items = data.data.pdfs;
