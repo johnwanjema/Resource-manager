@@ -349,7 +349,9 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n                        15\n                    "
+                            "\n                       " +
+                              _vm._s(_vm.links) +
+                              "\n                    "
                           )
                         ]
                       ),
