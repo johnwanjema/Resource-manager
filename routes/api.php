@@ -29,4 +29,4 @@ Route::group(["middleware" => ['auth:sanctum', 'throttle:200,1']], function () {
     Route::get('dashboardStats', 'HomeController@getDashboardStats');
 });
 
-// dashboardstats
+

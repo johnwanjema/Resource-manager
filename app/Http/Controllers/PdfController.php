@@ -43,6 +43,7 @@ class PdfController extends Controller
             $this->validate($request, [
                 'title' => 'required',
                 'description' => 'required',
+                'pdf' => 'required',
             ]);
 
             $resource = new Pdf();

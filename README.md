@@ -42,7 +42,7 @@ git remote add origin <your-repository-url>
 Copy content in  `.env.example` to a `.env` file:
 
 ```
-cp .env..env.example .env
+cp .env.example .env
 ```
 
 Create database and set up  your `.env` 
@@ -66,7 +66,7 @@ composer install
 
 ``` bash
 
-$ npm run install
+npm install
 ```
 
 
@@ -92,11 +92,20 @@ php artisan serve
 
 ### Access the application at localhost:8000
 
-Open [localhost:3000](http://localhost:800/)
+Open [localhost:8000](http://localhost:8000/)
 
-use the credentials
+use the credentials:
 
-admin@theremotecompany.com as the email and password12345 as the password.
+email    : admin@theremotecompany.com
+password : password12345 
+
+
+## Run Unit Test
+
+```bash
+
+composer test
+```
 
 ## Bugs
 
