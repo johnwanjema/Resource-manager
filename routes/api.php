@@ -18,14 +18,15 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::apiResources([
-    'pdfs' => 'PdfController',
-    'snippets' => 'SnippetController',
-    'links' => 'LinkController',
-]);
+Route::group(["middleware" => ['auth:sanctum', 'throttle:200,1']], function () {
+    Route::apiResources([
+        'pdfs' => 'PdfController',
+        'snippets' => 'SnippetController',
+        'links' => 'LinkController',
+    ]);
+    Route::post('updatepdf/{id}', 'PdfController@updatepdf');
+
+    Route::get('dashboardStats', 'HomeController@getDashboardStats');
+});
 
 // dashboardstats
-Route::get('dashboardStats','HomeController@getDashboardStats');
-
-Route::get('gethomedata','VisitorsController@getHomeData');
-Route::post('updatepdf/{id}','PdfController@updatepdf');
