@@ -26,4 +26,14 @@ class AuthenticationTest extends TestCase
                 ]
             ]);
     }
+
+    public function testSuccessfulLogin()
+    {
+        $loginData = ['email' => 'admin@theremotecompany.com', 'password' => 'password12345'];
+
+        $this->json('POST', '/login', $loginData, ['Accept' => 'application/json'])
+            ->assertStatus(204);
+
+        $this->assertAuthenticated();
+    }
 }
