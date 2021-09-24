@@ -66,7 +66,7 @@ composer install
 
 ``` bash
 
-$ npm run install
+npm run install
 ```
 
 
@@ -92,7 +92,7 @@ php artisan serve
 
 ### Access the application at localhost:8000
 
-Open [localhost:3000](http://localhost:800/)
+Open [localhost:8000](http://localhost:8000/)
 
 use the credentials
 
