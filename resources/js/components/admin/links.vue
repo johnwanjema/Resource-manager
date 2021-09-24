@@ -38,9 +38,12 @@
                                     <template v-slot:cell(#)="row">
                                             <p>{{row.index + 1}}</p>
                                     </template>
-
+                                        <!-- .substring(0,20)  + '...' -->
                                     <template v-slot:cell(created_at)="row">
                                         <p>{{row.item.created_at |filterDateOnly}}</p>
+                                    </template>
+                                    <template v-slot:cell(link)="row">
+                                        <p>{{row.item.link.substring(0,20)  + '...'}}</p>
                                     </template>
                                     <template v-slot:cell(open_in_new_tab)="row">
                                         <p v-if="row.item.open_in_new_tab == 1">True</p>
@@ -97,10 +100,16 @@
                                         <label for="description">Link</label>
                                         <input required v-model="form.link" type="url" class="form-control" id="link" name="link" placeholder="Enter link.." />
                                     </div>
-                                     <div class="form-group">
+                                    <div class="form-group row">
+                                        <label class="col-12" for="textarea-input">Description</label>
+                                        <div class="col-12">
+                                            <textarea v-model="form.description" class="form-control" id="textarea-input" name="textarea-input" rows="4" placeholder="Description" spellcheck="false"></textarea>
+                                        </div>
+                                    </div>
+                                     <!-- <div class="form-group">
                                         <label for="description">Description</label>
                                         <input required v-model="form.description" type="text" class="form-control" id="description" name="description" placeholder="Enter description.." />
-                                    </div>
+                                    </div> -->
                                    <div class="form-group row">
                                         <label class="col-12"></label>
                                         <div class="col-12">
@@ -145,7 +154,7 @@ export default {
                 title: '',
                 link: '',
                 description:'',
-                open_in_new_tab: false
+                open_in_new_tab: 0
             }),
             editMode: false
         }
@@ -161,9 +170,9 @@ export default {
             this.form.fill(link)
         },
         updateLink() {
+            this.form.open_in_new_tab == true ? this.form.open_in_new_tab = 1 : this.form.open_in_new_tab = 0;
             this.form.put('/api/links/' + this.form.id)
                 .then(({ data }) => {
-                    // console.log(data);
                     if(data.success){
                         toast.fire({
                         icon: "success",

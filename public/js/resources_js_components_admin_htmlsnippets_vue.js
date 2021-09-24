@@ -156,6 +156,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -165,7 +169,7 @@ __webpack_require__.r(__webpack_exports__);
         key: 'title'
       }, {
         key: 'description'
-      }, 'created_at', {
+      }, 'snippet', 'created_at', {
         key: 'actions',
         label: 'Actions'
       }],
@@ -545,6 +549,20 @@ var render = function() {
                           }
                         },
                         {
+                          key: "cell(snippet)",
+                          fn: function(row) {
+                            return [
+                              _c("p", {
+                                domProps: {
+                                  innerHTML: _vm._s(
+                                    row.item.snippet.substring(0, 20) + "..."
+                                  )
+                                }
+                              })
+                            ]
+                          }
+                        },
+                        {
                           key: "cell(created_at)",
                           fn: function(row) {
                             return [
@@ -904,7 +922,9 @@ var render = function() {
                   _vm._m(2),
                   _vm._v(" "),
                   _c("div", { staticClass: "block-content" }, [
-                    _c("p", [_vm._v(_vm._s(_vm.snippet.snippet))])
+                    _c("p", {
+                      domProps: { innerHTML: _vm._s(_vm.snippet.snippet) }
+                    })
                   ])
                 ]
               ),

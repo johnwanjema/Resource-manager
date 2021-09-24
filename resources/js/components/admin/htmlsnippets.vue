@@ -38,6 +38,10 @@
                                     <template v-slot:cell(#)="row">
                                                 <p>{{row.index + 1}}</p>
                                     </template>
+                                    <!-- snippet -->
+                                    <template v-slot:cell(snippet)="row">
+                                                <p v-html="row.item.snippet.substring(0,20)  + '...'"></p>
+                                    </template>
 
                                     <template v-slot:cell(created_at)="row">
                                         <p>
@@ -131,7 +135,7 @@
                             </div>
                         </div>
                         <div class="block-content">
-                            <p >{{snippet.snippet}}</p>
+                            <p v-html="snippet.snippet"></p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -149,7 +153,7 @@ export default {
         return {
             currentPage: 1,
             perPage: 5,
-            fields: ['#', { key: 'title', }, { key: 'description', }, 'created_at', { key: 'actions', label: 'Actions' }],
+            fields: ['#', { key: 'title', }, { key: 'description', }, 'snippet', 'created_at', { key: 'actions', label: 'Actions' }],
             snippets: [],
             filter: null,
             filterOn: [],

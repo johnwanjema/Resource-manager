@@ -89,9 +89,11 @@
                                     <label for="email">Title</label>
                                     <input required v-model="form.title" type="text" class="form-control" id="email" name="email" placeholder="Enter title.." />
                                 </div>
-                                <div class="form-group">
-                                    <label for="description">Description</label>
-                                    <input required v-model="form.description" type="text" class="form-control" id="description" name="description" placeholder="Enter description.." />
+                                <div class="form-group row">
+                                    <label class="col-12" for="textarea-input">Description</label>
+                                    <div class="col-12">
+                                        <textarea v-model="form.description" class="form-control" id="textarea-input" name="textarea-input" rows="4" placeholder="Description .." spellcheck="false"></textarea>
+                                    </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-12" for="file-input">File Upload</label>
