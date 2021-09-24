@@ -49,6 +49,29 @@ class pdfTest extends TestCase
             ]);
     }
 
-   
+    public function testCEOListedSuccessfully()
+    {
 
+        $user = User::factory()->make();
+        $this->actingAs($user, 'sanctum');
+
+        Pdf::factory()->create([
+            "title" => "Javascript",
+            "description" => "Made easier",
+            "status" => "available",
+            "storageLink" => "js.pdf",
+        ]);
+
+
+        $this->json('GET', 'api/pdfs', ['Accept' => 'application/json'])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "success",
+                "errors",
+                "status_code",
+                "status_message",
+                "message",
+                "data" => [],
+            ]);
+    }
 }
