@@ -99,6 +99,14 @@ use the credentials:
 email    : admin@theremotecompany.com
 password : password12345 
 
+
+## Run Unit Test
+
+```bash
+
+composer test
+```
+
 ## Bugs
 
 Create an issue mentioning the bug you have found.
