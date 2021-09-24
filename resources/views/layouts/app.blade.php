@@ -45,13 +45,13 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <router-link class="nav-link" to="/home/">PDF <span class="sr-only">(current)</span></router-link>
+                        <a class="nav-link" href="/home/">PDF <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/home/htmlsnippets">HTML snippet</router-link>
+                        <a class="nav-link" href="/home/htmlsnippets">HTML snippet</a>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/home/links">Links</router-link>
+                        <a class="nav-link" href="/home/links">Links</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ">
