@@ -4,9 +4,9 @@
             <div v-for="(item , i ) in items" :key="i" class="col-md-6" style="padding-bottom:25px">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">{{item.title}}</h5>
+                        <h5 class="card-title">{{item.title | uppercaseText}}</h5>
                         <p class="card-text">
-                            {{item.description}}
+                            {{item.description |uppercaseText}}
                         </p>
                         <a v-if="item.storageLink" style="float:right" class="btn btn-primary" :href="'/PDF/'+ item.storageLink" :download="item.title">Download</a>
                         <a v-if="item.snippet" style="float:right" href="javascript:void(0)" class="btn btn-primary" @click="copyToClipboard(item.snippet)">Copy to clipboard</a>

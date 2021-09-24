@@ -181,13 +181,13 @@ var render = function() {
               _c("div", { staticClass: "card" }, [
                 _c("div", { staticClass: "card-body" }, [
                   _c("h5", { staticClass: "card-title" }, [
-                    _vm._v(_vm._s(item.title))
+                    _vm._v(_vm._s(_vm._f("uppercaseText")(item.title)))
                   ]),
                   _vm._v(" "),
                   _c("p", { staticClass: "card-text" }, [
                     _vm._v(
                       "\n                        " +
-                        _vm._s(item.description) +
+                        _vm._s(_vm._f("uppercaseText")(item.description)) +
                         "\n                    "
                     )
                   ]),
