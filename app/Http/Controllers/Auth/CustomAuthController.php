@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\Console\Input\Input;
 
 class CustomAuthController extends Controller
@@ -27,12 +28,7 @@ class CustomAuthController extends Controller
         $user = User::where('email', $request['email'])->first();
 
         if(is_null($user)){
-            return (new Controller())->toRouteWithMessage(
-                'login',
-                "Login Failed",
-                "Check Your Login Credentials",
-                "error"
-            );
+            return Redirect::back()->withErrors(['email' => 'User not found, check your email.']);
         }
 
         if (Auth::attempt(["email" => $request['email'], 'password' => $request['password'],])) {
@@ -40,12 +36,10 @@ class CustomAuthController extends Controller
             return redirect('/admin');
           
         } else {
-            return (new Controller())->toRouteWithMessage(
-                'login',
-                "Login Failed",
-                "Check Your Login Credentials",
-                "error"
-            );
+            return Redirect::back()->withErrors([
+                // 'email' => 'User not found, check your email.',
+                'password' => 'Incorect credentials'
+            ]);
         }
     }
 }
