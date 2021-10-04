@@ -96,8 +96,13 @@ Open [localhost:8000](http://localhost:8000/)
 
 use the credentials:
 
-email    : admin@theremotecompany.com
-password : password12345 
+Email
+```
+admin@theremotecompany.com
+```
+```
+password : password12345
+```
 
 
 ## Run Unit Test
