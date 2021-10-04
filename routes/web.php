@@ -26,7 +26,7 @@ Route::get('/admin/{any?}', [
     function () {
         return view('admin');
     }
-])->middleware('auth')->where('any', '.*');
+])->middleware('auth:sanctum')->where('any', '.*');
 
 
 Auth::routes(['verify'=>true]);
