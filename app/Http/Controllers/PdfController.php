@@ -38,7 +38,6 @@ class PdfController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         try {
             $this->validate($request, [
                 'title' => 'required',
@@ -60,6 +59,19 @@ class PdfController extends Controller
             }
 
             $resource->status = 'available';
+
+
+            if ($request->hasFile('image'))
+            // return $request->all();
+            {
+                $file      = $request->file('image');
+                $filename  = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $picture   = date('His') . '-' . $filename;
+                $file->move(public_path('pdfPictures'), $picture);
+                $resource->imageUrl  = $picture;
+                // return $picture;
+            }
 
             if ($resource->save()) {
                 return api_response(true, null, 200, 'success', 'successfully saved PDF', $resource);
@@ -102,7 +114,7 @@ class PdfController extends Controller
      */
     public function update(Request $request, Pdf $pdf)
     {
-       //
+        //
     }
 
     /**
@@ -113,33 +125,34 @@ class PdfController extends Controller
      */
     public function destroy(Pdf $pdf)
     {
-        try{
+        try {
 
             //delete existing image
-            $imgWillDelete = public_path() . '/PDF/'.$pdf->storageLink;
+            $imgWillDelete = public_path() . '/PDF/' . $pdf->storageLink;
             File::delete($imgWillDelete);
 
 
             $pdf->delete();
 
-            return api_response(true,null, 200, 'success','successfully deleted resource', $pdf);
-        }catch (\Exception $exception){
-            return api_response(false,$exception->getMessage(), 200, 'error','error deleting resource', null);
+            return api_response(true, null, 200, 'success', 'successfully deleted resource', $pdf);
+        } catch (\Exception $exception) {
+            return api_response(false, $exception->getMessage(), 200, 'error', 'error deleting resource', null);
         }
     }
 
-    public function updatepdf($id, Request $request) {
+    public function updatepdf($id, Request $request)
+    {
         try {
             $pdf = Pdf::where('id', '=', $id)->first();
 
-            if (isset($request['title'])&& $request['title'] != "null")
+            if (isset($request['title']) && $request['title'] != "null")
                 $pdf->title = $request['title'];
 
             if (isset($request['description']) && $request['description'] != "null")
                 $pdf->description = $request['description'];
 
 
-            if (isset($request['status'])&& $request['status'] != "null")
+            if (isset($request['status']) && $request['status'] != "null")
                 $pdf->status = $request['status'];
 
 
