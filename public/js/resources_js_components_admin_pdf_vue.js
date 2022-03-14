@@ -132,12 +132,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       currentPage: 1,
       perPage: 5,
-      fields: ['#', {
+      fields: ['#', 'image', {
         key: 'title'
       }, {
         key: 'description'
@@ -152,7 +161,8 @@ __webpack_require__.r(__webpack_exports__);
         id: '',
         title: '',
         description: '',
-        pdf: ''
+        pdf: '',
+        image: ''
       }),
       editMode: false,
       pdf: {}
@@ -232,6 +242,7 @@ __webpack_require__.r(__webpack_exports__);
       data.append('title', this.form.title);
       data.append('description', this.form.description);
       data.append('pdf', this.form.pdf);
+      data.append('image', this.form.image);
       axios.post("/api/pdfs", data, {
         headers: {
           'accept': 'application/json',
@@ -279,6 +290,9 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
       });
+    },
+    selectImage: function selectImage(event) {
+      this.form.image = event.target.files[0];
     }
   },
   created: function created() {
@@ -558,6 +572,20 @@ var render = function() {
                           }
                         },
                         {
+                          key: "cell(image)",
+                          fn: function(row) {
+                            return [
+                              _c("img", {
+                                staticClass: "img-avatar",
+                                attrs: {
+                                  src: "/pdfPictures/" + row.item.imageUrl,
+                                  alt: ""
+                                }
+                              })
+                            ]
+                          }
+                        },
+                        {
                           key: "cell(actions)",
                           fn: function(row) {
                             return [
@@ -785,6 +813,29 @@ var render = function() {
                                   )
                                 }
                               }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group row" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "col-12",
+                              attrs: { for: "file-input" }
+                            },
+                            [_vm._v("Image")]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-12" }, [
+                            _c("input", {
+                              attrs: {
+                                required: "",
+                                type: "file",
+                                id: "image-input",
+                                name: "file-input"
+                              },
+                              on: { change: _vm.selectImage }
                             })
                           ])
                         ]),

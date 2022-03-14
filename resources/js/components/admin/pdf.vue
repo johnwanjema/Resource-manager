@@ -41,6 +41,9 @@
                                     <template v-slot:cell(created_at)="row">
                                         <p>{{row.item.created_at |filterDateOnly}}</p>
                                     </template>
+                                    <template v-slot:cell(image)="row">
+                                        <img :src="'/pdfPictures/'+ row.item.imageUrl" alt="" class="img-avatar">
+                                    </template>
 
                                     <template v-slot:cell(actions)="row">
                                         <a class="btn btn-primary btn-sm"  :href="'/PDF/'+ row.item.storageLink" target="_blank">
@@ -96,6 +99,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
+                                    <label class="col-12" for="file-input">Image</label>
+                                    <div class="col-12">
+                                        <input required  @change="selectImage" type="file" id="image-input" name="file-input">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label class="col-12" for="file-input">File Upload</label>
                                     <div class="col-12">
                                         <input required  @change="selectPdf" type="file" id="file-input" name="file-input">
@@ -125,7 +134,7 @@ export default {
         return {
             currentPage: 1,
             perPage: 5,
-            fields: ['#', { key: 'title', }, { key: 'description', }, 'created_at', { key: 'actions', label: 'Actions' }],
+            fields: ['#','image', { key: 'title', }, { key: 'description', }, 'created_at', { key: 'actions', label: 'Actions' }],
             pdfs: [],
             filter: null,
             filterOn: [],
@@ -134,6 +143,7 @@ export default {
                 title:'',
                 description:'',
                 pdf: '',
+                image:''
             }),
             editMode: false,
             pdf:{}
@@ -205,6 +215,7 @@ export default {
             data.append('title', this.form.title);
             data.append('description', this.form.description);
             data.append('pdf', this.form.pdf);
+            data.append('image', this.form.image);
 
             axios.post("/api/pdfs", data, {
                 headers: {
@@ -249,7 +260,9 @@ export default {
                 }
             });
         },
-
+        selectImage(event){
+            this.form.image = event.target.files[0];
+        }
     },
     created() {
         this.getPdfs();
